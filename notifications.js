@@ -270,11 +270,11 @@ async function requestPermission() {
     }
 }
 
-async function init() {
+async function init(userId) {
     createNotifBell();
     await requestPermission();
-    await checkCapsules();
-    setInterval(checkCapsules, 60000);
+    await checkCapsules(userId);
+    setInterval(() => checkCapsules(userId), 60000);
 }
 
-init(); 
+export { init };

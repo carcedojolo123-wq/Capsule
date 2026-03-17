@@ -197,16 +197,25 @@
 
     // ── AUTH GUARD ──
     onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-            window.location.href = 'examplesignin.html';
-            return;
-        }
-        document.getElementById('pageContent').style.display = 'block';
-        document.getElementById('userEmail').textContent = user.email;
-        document.getElementById('welcomeText').textContent = 'Welcome back 👋';
-        document.getElementById('welcomeSub').textContent = 'Here are all your sealed memories, ' + user.email;
+    if (!user) {
+        window.location.href = 'examplesignin.html';
+        return;
+    }
+    document.getElementById('pageContent').style.display = 'block';
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('welcomeText').textContent = 'Welcome back 👋';
+    document.getElementById('welcomeSub').textContent = 'Here are all your sealed memories, ' + user.email;
+    
+    // Force reload kung gikan sa seal page
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('refresh')) {
         await loadAllCapsules(user.uid);
-    });
+        // Clean ang URL
+        window.history.replaceState({}, '', 'dashboard.html');
+    } else {
+        await loadAllCapsules(user.uid);
+    }
+});
 
     // ── LOGOUT ──
     document.getElementById('logoutBtn').addEventListener('click', async () => {

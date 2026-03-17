@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPSULE - Memory Detail</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#C7A07A">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #f5ede0;
+            --surface:   #fffdf8;
+            --border:    #e8c99a;
+            --brown:     #4a3220;
+            --brown-mid: #8b6b4f;
+            --brown-lt:  #b89878;
+            --red:       #b84a4a;
+            --green:     #4a8b5f;
+            --shadow:    rgba(74,50,32,0.10);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Poppins', sans-serif;
+            color: var(--brown);
+            min-height: 100vh;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+        .navbar-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+        .btn-back {
+            padding: 7px 18px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--brown);
+            font-weight: 500;
+            transition: all 0.2s;
+            width: auto;
+            margin-top: 0;
+        }
+        .btn-back:hover { background: var(--border); }
+
+        /* ── MAIN ── */
+        .main {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* ── LOADING ── */
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--brown-lt);
+            font-size: 14px;
+        }
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid var(--border);
+            border-top-color: var(--brown);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── LOCKED STATE ── */
+        .locked-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .locked-icon { font-size: 64px; margin-bottom: 20px; }
+        .locked-state h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .locked-state p { font-size: 14px; color: var(--brown-lt); line-height: 1.7; }
+        .locked-countdown {
+            margin-top: 20px;
+            display: inline-block;
+            background: #fef3e2;
+            border: 1px solid #f0d090;
+            color: #a07030;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ── DETAIL CARD ── */
+        .detail-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px var(--shadow);
+        }
+
+        /* Status banner sa taas ng card */
+        .detail-banner {
+            background: #eaf5ee;
+            border-bottom: 1.5px solid #b0dfc0;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        /* Media — image or video */
+        .detail-media {
+            width: 100%;
+            max-height: 480px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* No media placeholder */
+        .detail-no-media {
+            width: 100%;
+            height: 200px;
+            background: #f0e8d8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--brown-lt);
+        }
+
+        /* Body ng card */
+        .detail-body { padding: 28px; }
+
+        .detail-message {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--brown);
+            margin-bottom: 24px;
+            white-space: pre-wrap; /* para mapreserve ang line breaks */
+        }
+
+        /* Meta info (dates) */
+        .detail-meta {
+            border-top: 1.5px solid var(--border);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--brown-lt);
+        }
+        .meta-icon { font-size: 16px; }
+        .meta-label { font-weight: 600; color: var(--brown); margin-right: 4px; }
+
+        /* ── MUSIC BTN ── */
+        #music-btn {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            width: 48px; height: 48px;
+            font-size: 20px; cursor: pointer;
+            box-shadow: 0 4px 15px var(--shadow);
+            z-index: 999;
+            transition: transform 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #music-btn:hover { transform: scale(1.1); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 640px) {
+            .navbar { padding: 0 16px; }
+            .main { padding: 24px 16px 60px; }
+            .detail-body { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Music -->
+<audio id="capsuleMusic" loop>
+    <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
+</audio>
+
+<!-- Music Button -->
+<button id="music-btn">🎵</button>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="navbar-logo">CAPSULE</div>
+    <button class="btn-back" id="backBtn">← Back to Dashboard</button>
+</nav>
+
+<!-- MAIN CONTENT — hidden una -->
+<div class="main" id="pageContent" style="display:none;">
+    <div id="capsuleContent">
+        <div class="loading">
+            <div class="spinner"></div>
+            Loading your memory...
+        </div>
+    </div>
+</div>
+
+<!-- Notifications -->
+<script type="module" src="notifications.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged }
+        from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+    import { supabase } from './supabase.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
+        authDomain: "capsule-d556e.firebaseapp.com",
+        projectId: "capsule-d556e",
+        storageBucket: "capsule-d556e.firebasestorage.app",
+        messagingSenderId: "667845284113",
+        appId: "1:667845284113:web:cf11b1d4b7ef99eb83fcb0",
+        databaseURL: "https://capsule-d556e-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ── BACK BUTTON ──
+    document.getElementById('backBtn').addEventListener('click', () => {
+        window.location.href = 'dashboard.html';
+    });
+
+    // ── AUTH GUARD ──
+    // Kung wala naka-login — ibalik sa Capsule.html
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = 'examplesignin.html';
+            return;
+        }
+
+        // Show page
+        document.getElementById('pageContent').style.display = 'block';
+
+        // ── KUHA ANG CAPSULE ID GIKAN SA URL ──
+        // Kung nag-click ka sa dashboard — ang URL ingon ani:
+        // capsule-detail.html?id=123
+        // Kuhaon nato ang "123" para mahibaw-an kung unsang capsule ang i-load
+        const params    = new URLSearchParams(window.location.search);
+        const capsuleId = params.get('id');
+
+        if (!capsuleId) {
+            showError('No capsule selected. Please go back and try again.');
+            return;
+        }
+
+        await loadCapsule(capsuleId, user.uid);
+    });
+
+    // ── LOAD CAPSULE GIKAN SA SUPABASE ──
+    async function loadCapsule(capsuleId, userId) {
+        const { data: capsule, error } = await supabase
+            .from('memories')
+            .select('*')
+            .eq('id', capsuleId)       // i-kuha ang specific nga capsule
+            .eq('user_id', userId)     // security: imong capsule lang
+            .single();
+
+        if (error || !capsule) {
+            showError('Memory not found or you do not have access to it.');
+            return;
+        }
+
+        renderCapsule(capsule);
+    }
+
+    // ── RENDER ANG CAPSULE ──
+    function renderCapsule(capsule) {
+        const container = document.getElementById('capsuleContent');
+        const now       = new Date();
+        const openDate  = new Date(capsule.open_date);
+        const isLocked  = openDate > now;
+
+        // ── KUNG LOCKED PA — show locked state ──
+        if (isLocked) {
+            const diff    = openDate - now;
+            const days    = Math.floor(diff / 86400000);
+            const hours   = Math.floor((diff % 86400000) / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+
+            let countdownText = '';
+            if (days > 0)         countdownText = 'Opens in ' + days + ' day' + (days > 1 ? 's' : '');
+            else if (hours > 0)   countdownText = 'Opens in ' + hours + ' hour' + (hours > 1 ? 's' : '');
+            else if (minutes > 0) countdownText = 'Opens in ' + minutes + ' minute' + (minutes > 1 ? 's' : '');
+            else                  countdownText = 'Opening very soon...';
+
+            const openDateLabel = openDate.toLocaleDateString('en-PH', {
+                year: 'numeric', month: 'long', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila'
+            });
+
+            container.innerHTML = `
+                <div class="locked-state">
+                    <div class="locked-icon">🔒</div>
+                    <h2>This capsule is still sealed</h2>
+                    <p>This memory is locked until its open date.<br>
+                       Come back when it's ready!</p>
+                    <div class="locked-countdown">⏳ ${countdownText}</div>
+                    <br><br>
+                    <p style="font-size:13px; color: var(--brown-lt);">
+                        📅 Opens on: ${openDateLabel}
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        // ── KUNG OPENED NA — show full content ──
+
+        // Media — image or video
+        let mediaHTML = '<div class="detail-no-media">📦</div>';
+        if (capsule.file_url) {
+            const isVideo = /\.(mp4|mov|webm|avi)$/i.test(capsule.file_url);
+            if (isVideo) {
+                mediaHTML = `<video class="detail-media" controls src="${capsule.file_url}"></video>`;
+            } else {
+                mediaHTML = `<img class="detail-media" src="${capsule.file_url}" alt="Memory">`;
+            }
+        } else if (capsule.message) {
+            mediaHTML = '<div class="detail-no-media">📝</div>';
+        }
+
+        // Dates
+        const openDateLabel = openDate.toLocaleDateString('en-PH', {
+            year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+
+        const sealedDateLabel = capsule.created_at
+            ? new Date(capsule.created_at).toLocaleDateString('en-PH', {
+                year: 'numeric', month: 'long', day: 'numeric'
+              })
+            : 'Unknown';
+
+        // Message
+        const messageHTML = capsule.message
+            ? `<div class="detail-message">💬 ${capsule.message}</div>`
+            : `<div class="detail-message" style="color:var(--brown-lt); font-style:italic;">No message was written for this capsule.</div>`;
+
+        container.innerHTML = `
+            <div class="detail-card">
+
+                <!-- Green banner sa taas -->
+                <div class="detail-banner">
+                    🎁 This memory is now open!
+                </div>
+
+                <!-- Image or Video -->
+                ${mediaHTML}
+
+                <!-- Body -->
+                <div class="detail-body">
+
+                    <!-- Message -->
+                    ${messageHTML}
+
+                    <!-- Meta info -->
+                    <div class="detail-meta">
+                        <div class="meta-row">
+                            <span class="meta-icon">📅</span>
+                            <span><span class="meta-label">Opened on:</span> ${openDateLabel}</span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-icon">🕰️</span>
+                            <span><span class="meta-label">Sealed on:</span> ${sealedDateLabel}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        `;
+
+        // ── MUSIC AUTOPLAY ──
+        // Gi-expose ang music sa window para ma-access sa notifications.js
+        const music = document.getElementById('capsuleMusic');
+        if (music) {
+            window._bgMusic = music; // para ma-access sa notifications.js
+
+            const startMusic = () => {
+                if (window._capsuleSoundPlaying) return; // special sound ga-play pa
+                if (isPlaying) return; // nag-play na
+                music.play().then(() => {
+                    isPlaying = true;
+                    document.getElementById('music-btn').textContent = '🎵';
+                }).catch(() => {});
+            };
+
+            // Try autoplay — kung ma-block, mag-wait sa first interaction
+            music.play().then(() => {
+                isPlaying = true;
+                document.getElementById('music-btn').textContent = '🎵';
+            }).catch(() => {
+                // Gi-block sa browser — mag-play sa first user interaction
+                ['click', 'touchstart', 'keydown', 'scroll'].forEach(evt => {
+                    document.addEventListener(evt, startMusic, { once: true });
+                });
+            });
+        }
+    }
+
+    // ── ERROR STATE ──
+    function showError(msg) {
+        document.getElementById('capsuleContent').innerHTML = `
+            <div class="locked-state">
+                <div class="locked-icon">⚠️</div>
+                <h2>Oops!</h2>
+                <p>${msg}</p>
+            </div>
+        `;
+    }
+
+    // ── MUSIC TOGGLE ──
+    const music    = document.getElementById('capsuleMusic');
+    const musicBtn = document.getElementById('music-btn');
+    let isPlaying  = false;
+
+    // I-expose ang isPlaying state para ma-sync sa notifications.js
+    window._setMusicPlaying = (val) => {
+        isPlaying = val;
+        musicBtn.textContent = val ? '🎵' : '🔇';
+    };
+
+    musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            music.pause();
+            isPlaying = false;
+            musicBtn.textContent = '🔇';
+        } else {
+            music.play().catch(() => {});
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+        }
+    });
+
+    </script>
+    
+    <script>
+    
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(() =>console.log('SW registered!'))
+            .catch(err => console.log('SW error', err));
+    
+    }
+    
+    </script>
+
+</body>
+</html>

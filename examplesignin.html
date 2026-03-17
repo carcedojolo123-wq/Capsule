@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPSULE - Sign In</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#C7A07A">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #f5ede0;
+            --surface:   #fffdf8;
+            --border:    #e8c99a;
+            --brown:     #4a3220;
+            --brown-mid: #8b6b4f;
+            --brown-lt:  #b89878;
+            --red:       #b84a4a;
+            --green:     #4a8b5f;
+            --shadow:    rgba(74,50,32,0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Poppins', sans-serif;
+            color: var(--brown);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* ── BACKGROUND DECORATION ── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(200,164,107,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -100px; left: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(200,164,107,0.10) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── MAIN WRAPPER ── */
+        .auth-wrapper {
+            width: 100%;
+            max-width: 420px;
+            animation: fadeUp 0.5s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── LOGO ── */
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .auth-logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            letter-spacing: 8px;
+            color: var(--brown);
+            margin-bottom: 6px;
+        }
+        .auth-logo p {
+            font-size: 12px;
+            color: var(--brown-lt);
+            letter-spacing: 1px;
+        }
+
+        /* ── CARD ── */
+        .auth-card {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 8px 32px var(--shadow);
+        }
+
+        /* ── TABS ── */
+        .auth-tabs {
+            display: flex;
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 28px;
+            gap: 4px;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            color: var(--brown-lt);
+            transition: all 0.2s;
+            width: auto;
+            margin-top: 0;
+        }
+        .auth-tab.active {
+            background: var(--surface);
+            color: var(--brown);
+            font-weight: 600;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        /* ── FORM PANELS ── */
+        .auth-panel { display: none; }
+        .auth-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── FORM ELEMENTS ── */
+        .form-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--brown-lt);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: #fdfaf3;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--brown);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus {
+            border-color: var(--brown-mid);
+            box-shadow: 0 0 0 3px rgba(139,107,79,0.1);
+        }
+
+        /* ── SUBMIT BUTTON ── */
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: var(--brown);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        .btn-submit:hover { background: var(--brown-mid); }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled {
+            background: var(--brown-lt);
+            cursor: not-allowed;
+        }
+
+        /* ── SPINNER ── */
+        .spinner-inline {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── STATUS MESSAGE ── */
+        .status-msg {
+            margin-top: 14px;
+            font-size: 13px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.5;
+        }
+        .status-msg.success {
+            display: block;
+            background: #eaf5ee;
+            color: var(--green);
+            border: 1px solid #b0dfc0;
+        }
+        .status-msg.error {
+            display: block;
+            background: #fdf0f0;
+            color: var(--red);
+            border: 1px solid #f0b0b0;
+        }
+        .status-msg.loading {
+            display: block;
+            background: #fef9f0;
+            color: var(--brown-lt);
+            border: 1px solid var(--border);
+        }
+
+        /* ── DIVIDER ── */
+        .auth-divider {
+            text-align: center;
+            margin: 20px 0 0;
+            font-size: 13px;
+            color: var(--brown-lt);
+        }
+
+        /* ── BACK TO HOME ── */
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--brown-lt);
+        }
+        .back-home a {
+            color: var(--brown-mid);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* ── MUSIC BTN ── */
+        #music-btn {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            width: 48px; height: 48px;
+            font-size: 20px; cursor: pointer;
+            box-shadow: 0 4px 15px var(--shadow);
+            z-index: 999;
+            transition: transform 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #music-btn:hover { transform: scale(1.1); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .auth-card { padding: 28px 20px; }
+            .auth-logo h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Music -->
+<audio id="capsuleMusic" loop>
+    <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
+</audio>
+<button id="music-btn">🎵</button>
+
+<div class="auth-wrapper">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+        <h1>CAPSULE</h1>
+        <p>Seal your memories. Open them in the future.</p>
+    </div>
+
+    <!-- Card -->
+    <div class="auth-card">
+
+        <!-- Tabs: Login / Sign Up -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">
+                Login
+            </button>
+            <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">
+                Create Account
+            </button>
+        </div>
+
+        <!-- ── LOGIN PANEL ── -->
+        <div class="auth-panel active" id="loginPanel">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="loginEmail" placeholder="you@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Your password">
+            </div>
+            <button class="btn-submit" id="loginBtn">Login</button>
+            <div class="status-msg" id="loginStatus"></div>
+        </div>
+
+        <!-- ── SIGNUP PANEL ── -->
+        <div class="auth-panel" id="signupPanel">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="signupUsername" placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="signupEmail" placeholder="you@email.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="signupPassword" placeholder="Min. 6 characters">
+            </div>
+            <button class="btn-submit" id="signupBtn">Create Account</button>
+            <div class="status-msg" id="signupStatus"></div>
+        </div>
+
+        <div class="auth-divider">
+            <a style="color:var(--brown-lt); cursor:pointer; font-size:12px;"
+               onclick="forgotPassword()">
+               Forgot password?
+            </a>
+        </div>
+
+    </div>
+
+    <div class="back-home">
+        <a onclick="window.location.href='examplesignin.html'">← Back to Home</a>
+    </div>
+
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import {
+        getAuth,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        onAuthStateChanged,
+        sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+    import { getDatabase, ref, set }
+        from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
+        authDomain: "capsule-d556e.firebaseapp.com",
+        projectId: "capsule-d556e",
+        storageBucket: "capsule-d556e.firebasestorage.app",
+        messagingSenderId: "667845284113",
+        appId: "1:667845284113:web:cf11b1d4b7ef99eb83fcb0",
+        databaseURL: "https://capsule-d556e-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getDatabase(app);
+
+    // ── Kung naka-login na — redirect agad sa dashboard ──
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            window.location.href = 'dashboard.html';
+        }
+    });
+
+    // ══════════════════════
+    // HELPER FUNCTIONS
+    // ══════════════════════
+    function showStatus(id, msg, type) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className   = 'status-msg ' + type;
+    }
+
+    function setLoading(btnId, isLoading, originalText) {
+        const btn = document.getElementById(btnId);
+        if (isLoading) {
+            btn.disabled  = true;
+            btn.innerHTML = '<span class="spinner-inline"></span> Please wait...';
+        } else {
+            btn.disabled     = false;
+            btn.textContent  = originalText;
+        }
+    }
+
+    function getFirebaseError(code) {
+        const errors = {
+            'auth/user-not-found':     'No account found with this email.',
+            'auth/wrong-password':     'Wrong password. Please try again.',
+            'auth/invalid-email':      'Invalid email address.',
+            'auth/too-many-requests':  'Too many attempts. Try again later.',
+            'auth/email-already-in-use': 'Email already registered. Try logging in.',
+            'auth/weak-password':      'Password must be at least 6 characters.',
+            'auth/invalid-credential': 'Wrong email or password.'
+        };
+        return errors[code] || 'Something went wrong. Please try again.';
+    }
+
+    // ══════════════════════
+    // TAB SWITCHING
+    // ══════════════════════
+    window.switchTab = function(tab) {
+        document.getElementById('tabLogin').classList.toggle('active',  tab === 'login');
+        document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+        document.getElementById('loginPanel').classList.toggle('active',  tab === 'login');
+        document.getElementById('signupPanel').classList.toggle('active', tab === 'signup');
+    };
+
+    // ══════════════════════
+    // LOGIN
+    // ══════════════════════
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const email    = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        // Validation
+        if (!email || !password) {
+            showStatus('loginStatus', 'Please fill in all fields.', 'error');
+            return;
+        }
+
+        setLoading('loginBtn', true, 'Login');
+        showStatus('loginStatus', '⏳ Logging in...', 'loading');
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            showStatus('loginStatus', '✅ Login successful! Redirecting...', 'success');
+            // onAuthStateChanged ang mag-handle sa redirect
+        } catch (error) {
+            showStatus('loginStatus', '❌ ' + getFirebaseError(error.code), 'error');
+            setLoading('loginBtn', false, 'Login');
+        }
+    });
+
+    // Enter key para sa login
+    document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+
+    // ══════════════════════
+    // SIGN UP
+    // ══════════════════════
+    document.getElementById('signupBtn').addEventListener('click', async () => {
+        const username = document.getElementById('signupUsername').value.trim();
+        const email    = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+
+        // Validation
+        if (!username || !email || !password) {
+            showStatus('signupStatus', 'Please fill in all fields.', 'error');
+            return;
+        }
+        if (password.length < 6) {
+            showStatus('signupStatus', 'Password must be at least 6 characters.', 'error');
+            return;
+        }
+
+        setLoading('signupBtn', true, 'Create Account');
+        showStatus('signupStatus', '⏳ Creating your account...', 'loading');
+
+        try {
+            // ── STEP 1: Create account sa Firebase ──
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // ── STEP 2: I-save ang username sa Firebase Database ──
+            await set(ref(db, 'users/' + user.uid), {
+                username: username,
+                email:    email
+            });
+
+            // ── STEP 3: I-save ang username sa localStorage ──
+            localStorage.setItem('capsule_name_' + user.uid, username);
+
+            showStatus('signupStatus', '✅ Account created! Redirecting...', 'success');
+            // onAuthStateChanged ang mag-redirect sa dashboard
+
+        } catch (error) {
+            showStatus('signupStatus', '❌ ' + getFirebaseError(error.code), 'error');
+            setLoading('signupBtn', false, 'Create Account');
+        }
+    });
+
+    // ══════════════════════
+    // FORGOT PASSWORD
+    // ══════════════════════
+    window.forgotPassword = async function() {
+        const email = document.getElementById('loginEmail').value.trim();
+
+        if (!email) {
+            showStatus('loginStatus',
+                'Please enter your email address first, then click Forgot Password.',
+                'error'
+            );
+            return;
+        }
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            showStatus('loginStatus',
+                '✅ Reset link sent to ' + email + '! Check your inbox.',
+                'success'
+            );
+        } catch (error) {
+            showStatus('loginStatus',
+                '❌ ' + getFirebaseError(error.code),
+                'error'
+            );
+        }
+    };
+
+    // ══════════════════════
+    // MUSIC TOGGLE
+    // ══════════════════════
+    const music    = document.getElementById('capsuleMusic');
+    const musicBtn = document.getElementById('music-btn');
+    let isPlaying  = false;
+
+    musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            music.pause();
+            isPlaying = false;
+            musicBtn.textContent = '🔇';
+        } else {
+            music.play();
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+        }
+    });
+
+</script>
+
+    <script>
+    
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(() =>console.log('SW registered!'))
+            .catch(err => console.log('SW error', err));
+    
+    }
+
+    </script>
+
+</body>
+</html>

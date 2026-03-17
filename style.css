@@ -1,0 +1,539 @@
+/* ================================================
+   style.css — CAPSULE App
+   Clean, unified, fully responsive styles
+   ================================================ */
+
+/* ── GOOGLE FONTS ── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+/* ════════════════════════════════════
+   1. CSS VARIABLES
+════════════════════════════════════ */
+:root {
+    --bg:        #f5ede0;
+    --surface:   #fffdf8;
+    --border:    #e8c99a;
+    --brown:     #4a3220;
+    --brown-mid: #8b6b4f;
+    --brown-lt:  #b89878;
+    --gold:      #c8a46b;
+    --sand:      #d4a96a;
+    --red:       #b84a4a;
+    --green:     #4a8b5f;
+    --shadow:    rgba(74,50,32,0.10);
+}
+
+/* ════════════════════════════════════
+   2. RESET & BASE
+════════════════════════════════════ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: 'Poppins', sans-serif;
+    color: var(--brown);
+}
+
+a {
+    color: var(--brown-mid);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ════════════════════════════════════
+   3. TYPOGRAPHY
+════════════════════════════════════ */
+h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--brown);
+}
+
+/* ════════════════════════════════════
+   4. CAPSULE.HTML — Landing Page
+════════════════════════════════════ */
+body.landing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5d698;
+}
+
+.frame {
+    width: 90%;
+    max-width: 1200px;
+    height: 80vh;
+    border: 4px solid rgba(255,255,255,0.97);
+    padding: 30px;
+    position: relative;
+    background: #f4efe3;
+    border-radius: 4px;
+}
+
+.about {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100%;
+    align-items: center;
+    gap: 20px;
+}
+
+.left { text-align: center; }
+.left h2 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-size: 28px;
+}
+
+.open-btn {
+    margin-top: 20px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    background: var(--brown-mid);
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    transition: background 0.2s;
+    width: auto;
+}
+.open-btn:hover { background: var(--brown); }
+
+.right { display: flex; justify-content: center; }
+.how-box {
+    width: 90%;
+    height: 70%;
+    border: 4px solid #000;
+    padding: 25px;
+    border-radius: 4px;
+}
+.how-box h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    font-size: 18px;
+}
+.how-box p {
+    line-height: 1.8;
+    color: #333;
+    font-size: 14px;
+}
+
+/* ── LOGIN MODAL ── */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 20px;
+}
+.modal.active { display: flex; }
+
+.login-card {
+    width: 100%;
+    max-width: 360px;
+    background: #fff8ec;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+.login-card h2 {
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #6b4a2f;
+    font-size: 22px;
+}
+.login-card input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 10px;
+    border: 1.5px solid #c6b19a;
+    outline: none;
+    background: #fffdf8;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--brown);
+    transition: border-color 0.2s;
+}
+.login-card input:focus { border-color: var(--brown-mid); }
+.login-card button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: var(--brown-mid);
+    color: white;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0;
+}
+.login-card button:hover { background: var(--brown); }
+.login-card button:disabled {
+    background: var(--brown-lt);
+    cursor: not-allowed;
+}
+.login-card a {
+    display: block;
+    text-align: center;
+    margin-top: 12px;
+    color: #6b4a2f;
+    font-size: 14px;
+}
+
+/* ════════════════════════════════════
+   5. HOURGLASS — Capsule.html
+════════════════════════════════════ */
+.hourglass {
+    width: 140px;
+    height: 220px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.top, .bottom {
+    position: absolute;
+    width: 100%;
+    height: 45%;
+    border: 4px solid #c8a27a;
+    background: rgba(255,255,255,0.7);
+    overflow: hidden;
+}
+.top    { top: 0;    border-radius: 60px 60px 0 0; }
+.bottom { bottom: 0; border-radius: 0 0 60px 60px; }
+
+.sand-top {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 70%;
+    background: var(--sand);
+    clip-path: polygon(0 0, 100% 0, 60% 100%, 40% 100%);
+    animation: sandDown 8s linear infinite;
+}
+.sand-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10%;
+    background: var(--sand);
+    border-radius: 0 0 60px 60px;
+    animation: sandUp 8s linear infinite;
+}
+.neck {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 20px;
+    background: #c8a27a;
+    z-index: 5;
+}
+.stream {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 0;
+    background: var(--sand);
+    animation: stream 8s linear infinite;
+}
+.stand-top, .stand-bottom {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 12px;
+    background: var(--brown-mid);
+    border-radius: 20px;
+}
+.stand-top    { top: -12px; }
+.stand-bottom { bottom: -12px; }
+
+@keyframes sandDown { 0% { height: 70%; } 100% { height: 10%; } }
+@keyframes sandUp   { 0% { height: 10%; } 100% { height: 70%; } }
+@keyframes stream {
+    0%   { height: 0; }
+    20%  { height: 60px; }
+    80%  { height: 60px; }
+    100% { height: 0; }
+}
+
+/* ════════════════════════════════════
+   6. CAPSULEINSIDE.HTML — Seal Page
+════════════════════════════════════ */
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+header h1 {
+    font-size: 3rem;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+}
+.subtitle {
+    text-align: center;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.hourglass-wrapper {
+    margin: 30px auto;
+    text-align: center;
+}
+.hourglass-label {
+    margin-top: 10px;
+    font-style: italic;
+    opacity: 0.8;
+    font-size: 13px;
+}
+
+.seal-animation {
+    box-shadow: 0 0 20px #e0b76f;
+    transition: 0.4s ease;
+}
+
+.form-box {
+    background: #fffaf1;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px var(--shadow);
+    border: 1.5px solid var(--border);
+}
+.form-box h2 {
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 16px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--brown);
+}
+
+textarea,
+input[type="file"],
+input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 8px;
+    background: #fdfaf3;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--brown);
+    outline: none;
+    transition: border-color 0.2s;
+}
+textarea:focus,
+input[type="datetime-local"]:focus {
+    border-color: var(--brown-mid);
+}
+textarea { resize: vertical; min-height: 100px; }
+
+button {
+    margin-top: 20px;
+    padding: 12px;
+    background: var(--brown-mid);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 14px;
+}
+button:hover { background: var(--brown); }
+button:disabled { background: var(--brown-lt); cursor: not-allowed; }
+
+#logoutBtn { background: var(--red); width: auto; }
+#logoutBtn:hover { background: #9a3a3a; }
+
+.status {
+    margin-top: 15px;
+    text-align: center;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--brown-mid);
+    min-height: 18px;
+}
+
+/* ════════════════════════════════════
+   7. AUTH BOX — examplesignin.html
+════════════════════════════════════ */
+.auth-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 60px auto;
+    background: #fffaf1;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px var(--shadow);
+    border: 1.5px solid var(--border);
+    text-align: center;
+}
+.auth-box input {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    background: #fdfaf3;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--brown);
+    outline: none;
+}
+.auth-box input:focus { border-color: var(--brown-mid); }
+.auth-box button {
+    width: 100%;
+    padding: 12px;
+    background: var(--brown-mid);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-top: 8px;
+}
+.auth-box button:hover { background: var(--brown); }
+.switch-link {
+    margin-top: 12px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: var(--brown-mid);
+}
+
+/* ════════════════════════════════════
+   8. CLOCK
+════════════════════════════════════ */
+#clock {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #5b4635;
+}
+
+/* ════════════════════════════════════
+   9. MUSIC BUTTON (global)
+════════════════════════════════════ */
+#music-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--shadow);
+    z-index: 9998;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0;
+    padding: 0;
+}
+#music-btn:hover { transform: scale(1.1); }
+
+/* ════════════════════════════════════
+   10. RESPONSIVE — Tablet (max 800px)
+════════════════════════════════════ */
+@media (max-width: 800px) {
+
+    /* Capsule.html landing */
+    .frame {
+        height: auto;
+        min-height: 90vh;
+        padding: 60px 20px 30px;
+    }
+    .content {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        height: auto;
+    }
+    .how-box {
+        height: auto;
+        width: 100%;
+    }
+    .about {
+        top: 16px;
+        right: 16px;
+        font-size: 13px;
+    }
+}
+
+/* ════════════════════════════════════
+   11. RESPONSIVE — Mobile (max 480px)
+════════════════════════════════════ */
+@media (max-width: 480px) {
+
+    /* Capsule.html */
+    .frame { padding: 50px 14px 24px; }
+    .left h2 { font-size: 22px; }
+    .hourglass { width: 100px; height: 160px; }
+    .stand-top, .stand-bottom { width: 120px; }
+    .open-btn { padding: 10px 20px; font-size: 13px; }
+    .how-box { padding: 16px; }
+    .how-box h3 { font-size: 16px; }
+    .how-box p { font-size: 13px; }
+
+    /* Capsuleinside.html */
+    header h1 { font-size: 2rem; letter-spacing: 3px; }
+    .container { padding: 24px 16px 60px; }
+    .form-box { padding: 18px 14px; }
+
+    /* Auth box */
+    .auth-box { margin: 30px auto; padding: 20px 16px; }
+
+    /* Login card modal */
+    .login-card { padding: 24px 18px; }
+    .login-card h2 { font-size: 20px; }
+
+    /* Music button */
+    #music-btn { width: 42px; height: 42px; font-size: 18px; bottom: 16px; right: 16px; }
+}

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPSULE - My Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#C7A07A">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:        #f5ede0;
+            --surface:   #fffdf8;
+            --border:    #e8c99a;
+            --brown:     #4a3220;
+            --brown-mid: #8b6b4f;
+            --brown-lt:  #b89878;
+            --gold:      #c8a46b;
+            --red:       #b84a4a;
+            --green:     #4a8b5f;
+            --shadow:    rgba(74,50,32,0.10);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); font-family: 'Poppins', sans-serif; color: var(--brown); min-height: 100vh; }
+
+        /* NAVBAR */
+        .navbar {
+            background: var(--surface); border-bottom: 1.5px solid var(--border);
+            padding: 0 32px; height: 64px; display: flex; align-items: center;
+            justify-content: space-between; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 12px var(--shadow);
+        }
+        .navbar-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; }
+        .navbar-right { display: flex; align-items: center; gap: 14px; }
+        .user-email { font-size: 12px; color: var(--brown-lt); }
+        .btn-nav { padding: 7px 18px; border-radius: 20px; border: none; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; font-weight: 500; transition: all 0.2s; width: auto; margin-top: 0; }
+        .btn-seal { background: var(--brown); color: white; }
+        .btn-seal:hover { background: var(--brown-mid); }
+        .btn-logout { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
+        .btn-logout:hover { background: var(--red); color: white; }
+        .btn-profile { background: transparent; color: var(--brown); border: 1.5px solid var(--border); }
+        .btn-profile:hover { background: var(--border); }
+
+        /* MAIN */
+        .main { max-width: 960px; margin: 0 auto; padding: 36px 24px 60px; }
+
+        /* WELCOME */
+        .welcome { margin-bottom: 32px; }
+        .welcome h1 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 4px; }
+        .welcome p { font-size: 13px; color: var(--brown-lt); }
+
+        /* STATS */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+        .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 12px var(--shadow); text-align: center; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-icon { font-size: 28px; margin-bottom: 8px; }
+        .stat-number { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: var(--brown-lt); font-weight: 500; }
+
+        /* TABS */
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+        .tab-btn { background: none; border: none; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; color: var(--brown-lt); padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; width: auto; margin-top: 0; border-radius: 0; }
+        .tab-btn.active { color: var(--brown); border-bottom-color: var(--brown); }
+        .tab-btn:hover { color: var(--brown); background: none; }
+
+        /* GRID */
+        .capsules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+        /* CARD */
+        .capsule-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 20px; box-shadow: 0 3px 14px var(--shadow); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .capsule-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
+        .capsule-card.locked { background: #fdf8f0; border-color: #d4b896; }
+
+        /* BADGE */
+        .capsule-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 12px; }
+        .status-locked { background: #fef3e2; color: #a07030; border: 1px solid #f0d090; }
+        .status-opened { background: #eaf5ee; color: var(--green); border: 1px solid #b0dfc0; }
+
+        /* THUMB */
+        .capsule-thumb { width: 100%; height: 140px; border-radius: 10px; margin-bottom: 12px; background: #f0e8d8; display: flex; align-items: center; justify-content: center; font-size: 36px; color: var(--brown-lt); overflow: hidden; }
+        .capsule-thumb img, .capsule-thumb video { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; }
+
+        /* MESSAGE */
+        .capsule-message { font-size: 13px; color: var(--brown); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .capsule-message.no-message { color: var(--brown-lt); font-style: italic; }
+
+        /* DATE & COUNTDOWN */
+        .capsule-date { font-size: 11px; color: var(--brown-lt); }
+        .capsule-countdown { margin-top: 10px; font-size: 12px; color: #a07030; background: #fef3e2; border-radius: 8px; padding: 6px 10px; font-weight: 500; }
+
+        /* EMPTY */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--brown-lt); }
+        .empty-icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state h3 { font-size: 18px; color: var(--brown); margin-bottom: 8px; }
+        .empty-state p { font-size: 13px; line-height: 1.6; }
+        .btn-create { display: inline-block; margin-top: 20px; padding: 12px 28px; background: var(--brown); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+        .btn-create:hover { background: var(--brown-mid); }
+
+        /* LOADING */
+        .loading { text-align: center; padding: 60px; color: var(--brown-lt); font-size: 14px; }
+        .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* MUSIC */
+        #music-btn { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 2px solid var(--border); border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px var(--shadow); z-index: 999; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
+        #music-btn:hover { transform: scale(1.1); }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .stats-row { gap: 10px; }
+            .stat-card { padding: 14px 10px; }
+            .stat-number { font-size: 24px; }
+            .navbar { padding: 0 16px; }
+            .user-email { display: none; }
+            .main { padding: 24px 16px 60px; }
+            .capsules-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<audio id="capsuleMusic" loop>
+    <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
+</audio>
+<button id="music-btn">🎵</button>
+
+<nav class="navbar">
+    <div class="navbar-logo">CAPSULE</div>
+    <div class="navbar-right">
+        <span class="user-email" id="userEmail">Loading...</span>
+        <button class="btn-nav btn-seal" onclick="window.location.href='Capsuleinside.html'">+ Seal Memory</button>
+        <button class="btn-nav btn-profile" onclick="window.location.href='profile.html'">👤 Profile</button>
+        <button class="btn-nav btn-logout" id="logoutBtn">Sign Out</button>
+    </div>
+</nav>
+
+<div class="main" id="pageContent" style="display:none;">
+    <div class="welcome">
+        <h1 id="welcomeText">My Capsules</h1>
+        <p id="welcomeSub">Your sealed memories are waiting here.</p>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-number" id="statTotal">0</div>
+            <div class="stat-label">Total Capsules</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔒</div>
+            <div class="stat-number" id="statLocked">0</div>
+            <div class="stat-label">Still Locked</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🎁</div>
+            <div class="stat-number" id="statOpened">0</div>
+            <div class="stat-label">Opened</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="tabLocked" onclick="switchTab('locked')">🔒 Locked</button>
+        <button class="tab-btn" id="tabOpened" onclick="switchTab('opened')">🎁 Opened</button>
+    </div>
+
+    <div id="capsulesContainer">
+        <div class="loading">
+            <div class="spinner"></div>
+            Loading your capsules...
+        </div>
+    </div>
+</div>
+
+<script type="module" src="notifications.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut }
+        from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+    import { supabase } from './supabase.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
+        authDomain: "capsule-d556e.firebaseapp.com",
+        projectId: "capsule-d556e",
+        storageBucket: "capsule-d556e.firebasestorage.app",
+        messagingSenderId: "667845284113",
+        appId: "1:667845284113:web:cf11b1d4b7ef99eb83fcb0",
+        databaseURL: "https://capsule-d556e-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let allCapsules = [];
+    let currentTab  = 'locked';
+
+    // ── AUTH GUARD ──
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = 'examplesignin.html';
+            return;
+        }
+        document.getElementById('pageContent').style.display = 'block';
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('welcomeText').textContent = 'Welcome back 👋';
+        document.getElementById('welcomeSub').textContent = 'Here are all your sealed memories, ' + user.email;
+        await loadAllCapsules(user.uid);
+    });
+
+    // ── LOGOUT ──
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await signOut(auth);
+        window.location.href = 'examplesignin.html';
+    });
+
+    // ── LOAD ALL CAPSULES ──
+    async function loadAllCapsules(userId) {
+        const { data, error } = await supabase
+            .from('memories')
+            .select('*')
+            .eq('user_id', userId)
+            .order('open_date', { ascending: false });
+
+        if (error) {
+            console.error('Load error:', error);
+            document.getElementById('capsulesContainer').innerHTML =
+                '<div class="empty-state"><div class="empty-icon">⚠️</div>' +
+                '<h3>Could not load capsules</h3>' +
+                '<p>Please check your connection and try again.</p></div>';
+            return;
+        }
+
+        allCapsules = data || [];
+
+        const now    = new Date();
+        const locked = allCapsules.filter(c => new Date(c.open_date) > now);
+        const opened = allCapsules.filter(c => new Date(c.open_date) <= now);
+        // ↑ Okay ra ni — UTC comparison for stats
+
+        document.getElementById('statTotal').textContent  = allCapsules.length;
+        document.getElementById('statLocked').textContent = locked.length;
+        document.getElementById('statOpened').textContent = opened.length;
+
+        renderTab(currentTab);
+    }
+
+    // ── SWITCH TABS ──
+    window.switchTab = function(tab) {
+        currentTab = tab;
+        document.getElementById('tabLocked').classList.toggle('active', tab === 'locked');
+        document.getElementById('tabOpened').classList.toggle('active', tab === 'opened');
+        renderTab(tab);
+    };
+
+    // ── RENDER TAB ──
+    function renderTab(tab) {
+        const now = new Date(); // UTC — same as Supabase storage
+        const filtered = tab === 'locked'
+            ? allCapsules.filter(c => new Date(c.open_date) > now)
+            : allCapsules.filter(c => new Date(c.open_date) <= now);
+
+        const container = document.getElementById('capsulesContainer');
+
+        if (filtered.length === 0) {
+            container.innerHTML = tab === 'locked'
+                ? '<div class="empty-state"><div class="empty-icon">🔒</div>' +
+                  '<h3>No locked capsules</h3><p>Seal a new memory and set a future date!</p>' +
+                  '<a href="Capsuleinside.html" class="btn-create">+ Seal a Memory</a></div>'
+                : '<div class="empty-state"><div class="empty-icon">🎁</div>' +
+                  '<h3>No opened capsules yet</h3>' +
+                  '<p>Your capsules will appear here when their date arrives.</p></div>';
+            return;
+        }
+
+        const grid = document.createElement('div');
+        grid.className = 'capsules-grid';
+        filtered.forEach(c => grid.appendChild(buildCard(c, tab, now)));
+        container.innerHTML = '';
+        container.appendChild(grid);
+    }
+
+    // ── BUILD CARD ──
+    function buildCard(capsule, tab, now) {
+        const card = document.createElement('div');
+        card.className = 'capsule-card' + (tab === 'locked' ? ' locked' : '');
+
+        const badge = tab === 'locked'
+            ? '<span class="capsule-status status-locked">🔒 Sealed</span>'
+            : '<span class="capsule-status status-opened">🎁 Opened</span>';
+
+        // Thumbnail
+        let thumbHTML = '<div class="capsule-thumb">📦</div>';
+        if (capsule.file_url) {
+            const isVideo = /\.(mp4|mov|webm|avi)$/i.test(capsule.file_url);
+            if (tab === 'locked') {
+                thumbHTML = '<div class="capsule-thumb">🔒</div>';
+            } else if (isVideo) {
+                thumbHTML = '<div class="capsule-thumb"><video src="' + capsule.file_url + '"></video></div>';
+            } else {
+                thumbHTML = '<div class="capsule-thumb"><img src="' + capsule.file_url + '" alt="Memory"></div>';
+            }
+        } else if (capsule.message) {
+            thumbHTML = '<div class="capsule-thumb">📝</div>';
+        }
+
+        // Message
+        const msgText = tab === 'locked' ? '🔒 Hidden until open date...' : (capsule.message || '');
+        const msgHTML = capsule.message
+            ? '<div class="capsule-message">' + msgText + '</div>'
+            : '<div class="capsule-message no-message">No message</div>';
+
+        // Date — display sa Philippine Time
+        const openDateLabel = new Date(capsule.open_date).toLocaleDateString('en-PH', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            timeZone: 'Asia/Manila'
+        });
+
+        // Countdown — UTC comparison (same as Supabase)
+        let countdownHTML = '';
+        if (tab === 'locked') {
+            const diff    = new Date(capsule.open_date) - now;
+            const days    = Math.floor(diff / 86400000);
+            const hours   = Math.floor((diff % 86400000) / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const txt = days > 0
+                ? 'Opens in ' + days + ' day' + (days > 1 ? 's' : '')
+                : hours > 0
+                    ? 'Opens in ' + hours + ' hour' + (hours > 1 ? 's' : '')
+                    : minutes > 0
+                        ? 'Opens in ' + minutes + ' minute' + (minutes > 1 ? 's' : '')
+                        : 'Opening soon...';
+            countdownHTML = '<div class="capsule-countdown">⏳ ' + txt + '</div>';
+        }
+
+        card.innerHTML = badge + thumbHTML + msgHTML +
+            '<div class="capsule-date">📅 Opens: ' + openDateLabel + '</div>' +
+            countdownHTML;
+
+        // ── CLICK — mo-redirect sa capsule-detail.html ──
+        // I-pass ang capsule ID sa URL para mahibaw-an ang detail page kung unsang capsule
+        card.addEventListener('click', () => {
+            window.location.href = 'capsule-detail.html?id=' + capsule.id;
+        });
+
+        return card;
+    }
+
+    // ── MUSIC ──
+    const music    = document.getElementById('capsuleMusic');
+    const musicBtn = document.getElementById('music-btn');
+    let isPlaying  = false;
+
+    musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            music.pause();
+            isPlaying = false;
+            musicBtn.textContent = '🔇';
+        } else {
+            music.play();
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+        }
+    });
+</script>
+
+    <script>
+    
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+            .then(() =>console.log('SW registered!'))
+            .catch(err => console.log('SW error', err));
+    
+    }
+
+    </script>
+
+</body>
+</html>

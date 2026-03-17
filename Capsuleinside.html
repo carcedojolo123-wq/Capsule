@@ -524,8 +524,8 @@
             statusEl.innerText = "Memory sealed! 🎉 Redirecting...";
 
             setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 1500);
+    window.location.href = "dashboard.html?refresh=" + Date.now();
+}, 1500);
 
         } catch (err) {
             console.error(err);

@@ -210,14 +210,16 @@ function playCapsuleOpenSound() {
         });
 }
 
-async function checkCapsules() {
+async function checkCapsules(userId) {
+    if (!userId) return;
     const now = new Date().toISOString();
 
     const { data: readyMemories, error } = await supabase
         .from('memories')
         .select('*')
         .lte('open_date', now)
-        .eq('is_notified', false);
+        .eq('is_notified', false)
+        .eq('user_id', userId);
 
     if (error) { console.error('Notification check error:', error); return; }
     if (!readyMemories || readyMemories.length === 0) return;

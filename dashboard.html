@@ -120,7 +120,7 @@
 <body>
 
 <audio id="capsuleMusic" loop>
-    <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
+    <source src="/Capsule/Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
 </audio>
 <button id="music-btn">🎵</button>
 
@@ -128,8 +128,8 @@
     <div class="navbar-logo">CAPSULE</div>
     <div class="navbar-right">
         <span class="user-email" id="userEmail">Loading...</span>
-        <button class="btn-nav btn-seal" onclick="window.location.href='Capsuleinside.html'">+ Seal Memory</button>
-        <button class="btn-nav btn-profile" onclick="window.location.href='profile.html'">👤 Profile</button>
+        <button class="btn-nav btn-seal" onclick="window.location.href='/Capsule/Capsuleinside.html'">+ Seal Memory</button>
+        <button class="btn-nav btn-profile" onclick="window.location.href='/Capsule/profile.html'">👤 Profile</button>
         <button class="btn-nav btn-logout" id="logoutBtn">Sign Out</button>
     </div>
 </nav>
@@ -171,7 +171,6 @@
     </div>
 </div>
 
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut }
@@ -197,33 +196,32 @@
 
     // ── AUTH GUARD ──
     onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-        window.location.href = 'examplesignin.html';
-        return;
-    }
-    document.getElementById('pageContent').style.display = 'block';
-    document.getElementById('userEmail').textContent = user.email;
-    document.getElementById('welcomeText').textContent = 'Welcome back 👋';
-    document.getElementById('welcomeSub').textContent = 'Here are all your sealed memories, ' + user.email;
-    await loadAllCapsules(user.uid);
-    initNotif(user.uid);
+        if (!user) {
+            window.location.href = '/Capsule/examplesignin.html';
+            return;
+        }
+
+        document.getElementById('pageContent').style.display = 'block';
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('welcomeText').textContent = 'Welcome back 👋';
+        document.getElementById('welcomeSub').textContent = 'Here are all your sealed memories, ' + user.email;
+
+        // Force reload kung gikan sa seal page
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('refresh')) {
+            await loadAllCapsules(user.uid);
+            window.history.replaceState({}, '', '/Capsule/dashboard.html');
+        } else {
+            await loadAllCapsules(user.uid);
+        }
+
+        initNotif(user.uid);
     });
-    
-    // Force reload kung gikan sa seal page
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('refresh')) {
-        await loadAllCapsules(user.uid);
-        // Clean ang URL
-        window.history.replaceState({}, '', 'dashboard.html');
-    } else {
-        await loadAllCapsules(user.uid);
-    }
-});
 
     // ── LOGOUT ──
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         await signOut(auth);
-        window.location.href = 'examplesignin.html';
+        window.location.href = '/Capsule/examplesignin.html';
     });
 
     // ── LOAD ALL CAPSULES ──
@@ -248,7 +246,6 @@
         const now    = new Date();
         const locked = allCapsules.filter(c => new Date(c.open_date) > now);
         const opened = allCapsules.filter(c => new Date(c.open_date) <= now);
-        // ↑ Okay ra ni — UTC comparison for stats
 
         document.getElementById('statTotal').textContent  = allCapsules.length;
         document.getElementById('statLocked').textContent = locked.length;
@@ -267,7 +264,7 @@
 
     // ── RENDER TAB ──
     function renderTab(tab) {
-        const now = new Date(); // UTC — same as Supabase storage
+        const now = new Date();
         const filtered = tab === 'locked'
             ? allCapsules.filter(c => new Date(c.open_date) > now)
             : allCapsules.filter(c => new Date(c.open_date) <= now);
@@ -278,7 +275,7 @@
             container.innerHTML = tab === 'locked'
                 ? '<div class="empty-state"><div class="empty-icon">🔒</div>' +
                   '<h3>No locked capsules</h3><p>Seal a new memory and set a future date!</p>' +
-                  '<a href="Capsuleinside.html" class="btn-create">+ Seal a Memory</a></div>'
+                  '<a href="/Capsule/Capsuleinside.html" class="btn-create">+ Seal a Memory</a></div>'
                 : '<div class="empty-state"><div class="empty-icon">🎁</div>' +
                   '<h3>No opened capsules yet</h3>' +
                   '<p>Your capsules will appear here when their date arrives.</p></div>';
@@ -328,7 +325,7 @@
             timeZone: 'Asia/Manila'
         });
 
-        // Countdown — UTC comparison (same as Supabase)
+        // Countdown
         let countdownHTML = '';
         if (tab === 'locked') {
             const diff    = new Date(capsule.open_date) - now;
@@ -349,10 +346,9 @@
             '<div class="capsule-date">📅 Opens: ' + openDateLabel + '</div>' +
             countdownHTML;
 
-        // ── CLICK — mo-redirect sa capsule-detail.html ──
-        // I-pass ang capsule ID sa URL para mahibaw-an ang detail page kung unsang capsule
+        // Click — redirect sa capsule-detail.html
         card.addEventListener('click', () => {
-            window.location.href = 'capsule-detail.html?id=' + capsule.id;
+            window.location.href = '/Capsule/capsule-detail.html?id=' + capsule.id;
         });
 
         return card;
@@ -376,16 +372,13 @@
     });
 </script>
 
-    <script>
-    
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/Capsule/sw.js')
-            .then(() =>console.log('SW registered!'))
-            .catch(err => console.log('SW error', err));
-    
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/Capsule/sw.js')
+        .then(() => console.log('SW registered!'))
+        .catch(err => console.log('SW error', err));
     }
-
-    </script>
+</script>
 
 </body>
 </html>

@@ -6,13 +6,13 @@ function createNotifBell() {
     const style = document.createElement('style');
     style.textContent = `
         #notif-bell-wrapper {
-            position: fixed; top: 72px; right: 24px;
+            position: fixed; top: 68px; right: 16px;
             z-index: 9999; font-family: 'Poppins', sans-serif;
         }
         #notif-bell-btn {
             background: #fff8f0; border: 2px solid #e8c99a;
-            border-radius: 50%; width: 48px; height: 48px;
-            font-size: 22px; cursor: pointer;
+            border-radius: 50%; width: 44px; height: 44px;
+            font-size: 20px; cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.12);
             position: relative; transition: transform 0.2s;
             display: flex; align-items: center; justify-content: center;
@@ -22,22 +22,26 @@ function createNotifBell() {
             display: none; position: absolute;
             top: -5px; right: -5px;
             background: #e74c3c; color: white;
-            border-radius: 50%; width: 20px; height: 20px;
-            font-size: 11px; font-weight: bold;
+            border-radius: 50%; width: 18px; height: 18px;
+            font-size: 10px; font-weight: bold;
             align-items: center; justify-content: center;
             border: 2px solid white;
         }
         #notif-badge.visible { display: flex !important; }
+
+        /* ── DROPDOWN ── */
         #notif-dropdown {
-            display: none; position: absolute;
-            top: 58px; right: 0; width: 320px;
+            display: none;
+            position: fixed;
+            top: 120px; right: 12px;
+            width: min(300px, calc(100vw - 24px));
             background: #fffdf8; border: 1.5px solid #e8c99a;
             border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            overflow: hidden;
+            overflow: hidden; z-index: 9999;
         }
         #notif-dropdown.open { display: block; }
         .notif-header {
-            padding: 14px 18px; font-weight: 700; font-size: 14px;
+            padding: 12px 16px; font-weight: 700; font-size: 13px;
             color: #7a5c3a; border-bottom: 1px solid #f0e0c0;
             background: #fff5e6; display: flex;
             justify-content: space-between; align-items: center;
@@ -47,28 +51,40 @@ function createNotifBell() {
             background: none; border: none; font-family: inherit;
             text-decoration: underline;
         }
-        #notif-list { max-height: 340px; overflow-y: auto; }
+        #notif-list { max-height: 260px; overflow-y: auto; }
         .notif-item {
-            padding: 14px 18px; border-bottom: 1px solid #f5ead8;
-            display: flex; gap: 12px; align-items: flex-start;
+            padding: 12px 16px; border-bottom: 1px solid #f5ead8;
+            display: flex; gap: 10px; align-items: flex-start;
             cursor: pointer; transition: background 0.15s;
         }
         .notif-item:hover { background: #fff5e6; }
-        .notif-icon { font-size: 26px; flex-shrink: 0; }
-        .notif-title { font-weight: 600; font-size: 13px; color: #4a3220; margin-bottom: 3px; }
-        .notif-body { font-size: 12px; color: #8a6a4a; line-height: 1.4; }
-        .notif-time { font-size: 10px; color: #b89878; margin-top: 4px; }
-        .notif-empty { padding: 32px 18px; text-align: center; color: #c0a080; font-size: 13px; }
+        .notif-icon { font-size: 22px; flex-shrink: 0; }
+        .notif-title { font-weight: 600; font-size: 12px; color: #4a3220; margin-bottom: 2px; }
+        .notif-body {
+            font-size: 11px; color: #8a6a4a; line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .notif-time { font-size: 10px; color: #b89878; margin-top: 3px; }
+        .notif-empty { padding: 24px 16px; text-align: center; color: #c0a080; font-size: 12px; }
+
+        /* ── TOAST — top center, dili nag-overlap sa content ── */
         #notif-toast {
-            position: fixed; bottom: 28px; right: 24px;
+            position: fixed;
+            top: 76px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #4a3220; color: #fff8f0;
-            padding: 14px 20px; border-radius: 14px;
-            font-size: 13px; font-family: 'Poppins', sans-serif;
+            padding: 12px 18px; border-radius: 12px;
+            font-size: 12px; font-family: 'Poppins', sans-serif;
             box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-            z-index: 99999; display: none; max-width: 300px;
+            z-index: 99999; display: none;
+            width: min(280px, calc(100vw - 32px));
             line-height: 1.5; border-left: 4px solid #e8c99a;
+            text-align: left;
         }
         #notif-toast.show { display: block; }
+
         @keyframes bellShake {
             0%   { transform: rotate(0); }
             15%  { transform: rotate(15deg); }
@@ -171,43 +187,23 @@ function clearAllNotifications() {
     shownNotifIds.clear();
 }
 
-// ── PINAKA-IMPORTANTE NI BAI ──
-// Coordinate ang Joe Hisaishi music ug ang capsule-open.mp3
 function playCapsuleOpenSound() {
     const bgMusic = window._bgMusic || document.getElementById('capsuleMusic');
-
-    // Step 1: Pause si Joe Hisaishi
-    if (bgMusic && !bgMusic.paused) {
-        bgMusic.pause();
-    }
-
-    // Step 2: Flag — special sound ga-play na
+    if (bgMusic && !bgMusic.paused) bgMusic.pause();
     window._capsuleSoundPlaying = true;
-
-    // Step 3: Play si capsule-open.mp3
     const openSound = new Audio('./capsule-open.mp3');
     openSound.volume = 0.8;
-
-    // Step 4: Human sa special sound — resume si Joe
     const resumeBg = () => {
         window._capsuleSoundPlaying = false;
         if (bgMusic) {
             bgMusic.play().then(() => {
-                // I-update ang music button UI kung naa
                 if (window._setMusicPlaying) window._setMusicPlaying(true);
             }).catch(() => {});
         }
     };
-
     openSound.play()
-        .then(() => {
-            openSound.addEventListener('ended', resumeBg, { once: true });
-        })
-        .catch(() => {
-            // Browser nag-block sa special sound — i-clear lang ang flag
-            window._capsuleSoundPlaying = false;
-            // Dili na tag-an ang bgMusic — mo-continue ra siya
-        });
+        .then(() => { openSound.addEventListener('ended', resumeBg, { once: true }); })
+        .catch(() => { window._capsuleSoundPlaying = false; });
 }
 
 async function checkCapsules(userId) {
@@ -229,7 +225,6 @@ async function checkCapsules(userId) {
 
     for (const memory of readyMemories) {
         if (shownNotifIds.has(memory.id)) continue;
-
         shownNotifIds.add(memory.id);
         addNotifItem(memory);
         newCount++;
@@ -238,8 +233,7 @@ async function checkCapsules(userId) {
             const isVideo = memory.file_url &&
                 (memory.file_url.includes('.mp4') || memory.file_url.includes('.mov'));
             const icon = isVideo ? '🎬' : '📸';
-            showToast(`${icon} <strong>Your time capsule is now open!</strong><br>
-                       ${memory.message || 'Click the bell to view your memory.'}`);
+            showToast(`${icon} <strong>Your time capsule is now open!</strong><br>${memory.message || 'Click the bell to view your memory.'}`);
             shouldPlaySound = true;
         }
 
@@ -256,7 +250,6 @@ async function checkCapsules(userId) {
             .eq('id', memory.id);
     }
 
-    // Play special sound ONCE — gawas sa loop
     if (shouldPlaySound) playCapsuleOpenSound();
 
     if (newCount > 0) {

@@ -2,7 +2,7 @@
     "name": "CAPSULE - Time Capsule App",
     "short_name": "CAPSULE",
     "description": "Seal your memories and open them in the future.",
-    "start_url": "/examplesignin.html",
+    "start_url": "/Capsule/examplesignin.html"
     "display": "standalone",
     "background_color": "#C7A07A",
     "theme_color": "#fdfce8",

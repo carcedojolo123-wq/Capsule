@@ -23,16 +23,52 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); font-family: 'Poppins', sans-serif; color: var(--brown); min-height: 100vh; }
 
+        /* ── NAVBAR ── */
         .navbar {
-            background: var(--surface); border-bottom: 1.5px solid var(--border);
-            padding: 0 32px; height: 64px; display: flex; align-items: center;
-            justify-content: space-between; position: sticky; top: 0; z-index: 100;
+            background: var(--surface);
+            border-bottom: 1.5px solid var(--border);
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             box-shadow: 0 2px 12px var(--shadow);
         }
-        .navbar-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; }
-        .navbar-right { display: flex; align-items: center; gap: 14px; }
-        .user-email { font-size: 12px; color: var(--brown-lt); }
-        .btn-nav { padding: 7px 18px; border-radius: 20px; border: none; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; font-weight: 500; transition: all 0.2s; width: auto; margin-top: 0; }
+        .navbar-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            flex-shrink: 0;
+        }
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-email {
+            font-size: 12px;
+            color: var(--brown-lt);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 160px;
+        }
+        .btn-nav {
+            padding: 7px 14px;
+            border-radius: 20px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
         .btn-seal { background: var(--brown); color: white; }
         .btn-seal:hover { background: var(--brown-mid); }
         .btn-logout { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
@@ -40,11 +76,13 @@
         .btn-profile { background: transparent; color: var(--brown); border: 1.5px solid var(--border); }
         .btn-profile:hover { background: var(--border); }
 
-        .main { max-width: 960px; margin: 0 auto; padding: 36px 24px 60px; }
+        /* ── MAIN ── */
+        .main { max-width: 960px; margin: 0 auto; padding: 36px 24px 80px; }
         .welcome { margin-bottom: 32px; }
         .welcome h1 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 4px; }
         .welcome p { font-size: 13px; color: var(--brown-lt); }
 
+        /* ── STATS ── */
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
         .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 12px var(--shadow); text-align: center; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-3px); }
@@ -52,11 +90,13 @@
         .stat-number { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
         .stat-label { font-size: 12px; color: var(--brown-lt); font-weight: 500; }
 
+        /* ── TABS ── */
         .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
-        .tab-btn { background: none; border: none; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; color: var(--brown-lt); padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; width: auto; margin-top: 0; border-radius: 0; }
+        .tab-btn { background: none; border: none; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; color: var(--brown-lt); padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; border-radius: 0; }
         .tab-btn.active { color: var(--brown); border-bottom-color: var(--brown); }
         .tab-btn:hover { color: var(--brown); background: none; }
 
+        /* ── GRID ── */
         .capsules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .capsule-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 20px; box-shadow: 0 3px 14px var(--shadow); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
         .capsule-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); }
@@ -89,14 +129,51 @@
         #music-btn { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 2px solid var(--border); border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px var(--shadow); z-index: 999; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
         #music-btn:hover { transform: scale(1.1); }
 
-        @media (max-width: 640px) {
-            .stats-row { gap: 10px; }
-            .stat-card { padding: 14px 10px; }
-            .stat-number { font-size: 24px; }
-            .navbar { padding: 0 16px; }
+        /* ── TABLET (768px) ── */
+        @media (max-width: 768px) {
             .user-email { display: none; }
-            .main { padding: 24px 16px 60px; }
+            .btn-nav { padding: 6px 12px; font-size: 12px; }
+            .navbar-logo { font-size: 20px; }
+        }
+
+        /* ── MOBILE (480px) ── */
+        @media (max-width: 480px) {
+            .navbar {
+                height: auto;
+                padding: 10px 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .navbar-logo { font-size: 18px; letter-spacing: 2px; }
+            .navbar-right {
+                width: 100%;
+                justify-content: flex-end;
+                gap: 6px;
+            }
+            .btn-nav { padding: 6px 10px; font-size: 11px; }
+            .btn-seal::before { content: '+'; }
+            .btn-seal span { display: none; }
+
+            .main { padding: 20px 12px 80px; }
+            .welcome h1 { font-size: 22px; }
+            .welcome p { font-size: 12px; }
+
+            .stats-row { gap: 8px; }
+            .stat-card { padding: 12px 8px; border-radius: 12px; }
+            .stat-icon { font-size: 22px; margin-bottom: 4px; }
+            .stat-number { font-size: 22px; }
+            .stat-label { font-size: 10px; }
+
+            .tab-btn { padding: 8px 12px; font-size: 13px; }
             .capsules-grid { grid-template-columns: 1fr; }
+
+            #music-btn { width: 40px; height: 40px; font-size: 16px; bottom: 16px; right: 16px; }
+        }
+
+        /* ── VERY SMALL (360px) ── */
+        @media (max-width: 360px) {
+            .navbar-logo { font-size: 16px; }
+            .btn-nav { padding: 5px 8px; font-size: 10px; }
         }
     </style>
 </head>
@@ -177,7 +254,6 @@
     let allCapsules = [];
     let currentTab  = 'locked';
 
-    // ── AUTH GUARD ──
     onAuthStateChanged(auth, async (user) => {
         if (!user) {
             window.location.href = 'examplesignin.html';
@@ -199,13 +275,12 @@
 
         initNotif(user.uid);
     });
-    // ── LOGOUT ──
+
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         await signOut(auth);
         window.location.href = 'examplesignin.html';
     });
 
-    // ── LOAD ALL CAPSULES ──
     async function loadAllCapsules(userId) {
         const { data, error } = await supabase
             .from('memories')
@@ -235,7 +310,6 @@
         renderTab(currentTab);
     }
 
-    // ── SWITCH TABS ──
     window.switchTab = function(tab) {
         currentTab = tab;
         document.getElementById('tabLocked').classList.toggle('active', tab === 'locked');
@@ -243,7 +317,6 @@
         renderTab(tab);
     };
 
-    // ── RENDER TAB ──
     function renderTab(tab) {
         const now = new Date();
         const filtered = tab === 'locked'
@@ -270,7 +343,6 @@
         container.appendChild(grid);
     }
 
-    // ── BUILD CARD ──
     function buildCard(capsule, tab, now) {
         const card = document.createElement('div');
         card.className = 'capsule-card' + (tab === 'locked' ? ' locked' : '');
@@ -330,7 +402,6 @@
         return card;
     }
 
-    // ── MUSIC ──
     const music    = document.getElementById('capsuleMusic');
     const musicBtn = document.getElementById('music-btn');
     let isPlaying  = false;

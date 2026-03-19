@@ -1,6 +1,12 @@
 import { supabase } from './supabase.js';
 
-const shownNotifIds = new Set();
+// Load previously shown IDs from localStorage — dili ma-repeat after page reload
+const shownNotifIds = new Set(
+    JSON.parse(localStorage.getItem('capsule_shown_notifs') || '[]')
+);
+function saveShownIds() {
+    localStorage.setItem('capsule_shown_notifs', JSON.stringify([...shownNotifIds]));
+}
 
 function createNotifBell() {
     const style = document.createElement('style');
@@ -191,6 +197,7 @@ function clearAllNotifications() {
     list.innerHTML = '<div class="notif-empty">No notifications yet 🌙</div>';
     updateBadge(0);
     shownNotifIds.clear();
+    localStorage.removeItem('capsule_shown_notifs');
 }
 
 function playCapsuleOpenSound() {
@@ -232,6 +239,7 @@ async function checkCapsules(userId) {
     for (const memory of readyMemories) {
         if (shownNotifIds.has(memory.id)) continue;
         shownNotifIds.add(memory.id);
+        saveShownIds();
         addNotifItem(memory);
         newCount++;
 

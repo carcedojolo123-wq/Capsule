@@ -501,14 +501,14 @@
 
                 const { data: uploadData, error: uploadError } =
                     await supabase.storage
-                        .from('TIMECAPSULE')
+                        .from('timecapsule')
                         .upload(fileName, file);
 
                 if (uploadError) throw uploadError;
 
                 filePath = uploadData.path;
                 const { data: urlData } =
-                    supabase.storage.from('TIMECAPSULE').getPublicUrl(filePath);
+                    supabase.storage.from('timecapsule').getPublicUrl(filePath);
                 fileUrl = urlData.publicUrl;
             }
 

@@ -97,18 +97,20 @@
 
     // ── Helper: display date sa PH timezone permi ──
     function formatPH(dateStr, showTime = true) {
-        const options = {
-            year:     'numeric',
-            month:    'long',
-            day:      'numeric',
-            timeZone: 'Asia/Manila'
-        };
-        if (showTime) {
-            options.hour   = '2-digit';
-            options.minute = '2-digit';
-        }
-        return new Date(dateStr).toLocaleDateString('en-PH', options);
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'Asia/Manila'
+    };
+
+    if (showTime) {
+        options.hour   = '2-digit';
+        options.minute = '2-digit';
     }
+
+    return new Date(dateStr).toLocaleString('en-PH', options);
+}
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) {

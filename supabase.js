@@ -22,14 +22,7 @@ const firebaseApp     = initializeApp(firebaseConfig);
 const auth            = getAuth(firebaseApp);
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-const timeLabel = new Date(memory.open_date).toLocaleString('en-PH', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Asia/Manila'
-});
+}
 
 
 // ── Auth state logger (para sa debugging) ──

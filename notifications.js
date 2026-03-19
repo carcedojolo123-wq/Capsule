@@ -171,9 +171,14 @@ function addNotifItem(memory) {
     const isVideo = memory.file_url &&
         (memory.file_url.includes('.mp4') || memory.file_url.includes('.mov') || memory.file_url.includes('.webm'));
     const icon = isVideo ? '🎬' : '📸';
-    const timeLabel = new Date(memory.open_date).toLocaleDateString('en-PH', {
-        year: 'numeric', month: 'long', day: 'numeric'
-    });
+    const timeLabel = new Date(memory.open_date).toLocaleString('en-PH', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Manila'
+});
 
     const item = document.createElement('div');
     item.className = 'notif-item';

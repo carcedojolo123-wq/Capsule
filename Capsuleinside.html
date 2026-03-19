@@ -36,11 +36,11 @@
         .hg-sand-top { position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(180deg, #e8c070 0%, var(--sand) 100%); border-radius: 0 0 40px 40px; animation: sandDrain 8s ease-in-out infinite; }
         .hg-sand-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 10%; background: linear-gradient(180deg, #e8c070 0%, var(--sand) 100%); border-radius: 0 0 40px 40px; animation: sandFill 8s ease-in-out infinite; }
         .hg-stream { position: absolute; top: 48%; left: 50%; transform: translateX(-50%); width: 3px; background: linear-gradient(180deg, var(--sand), #e8c070); border-radius: 2px; animation: streamFlow 8s ease-in-out infinite; z-index: 6; }
-        @keyframes sandDrain { 0% { height: 65%; } 45% { height: 5%; } 50% { height: 5%; } 95% { height: 65%; } 100% { height: 65%; } }
-        @keyframes sandFill { 0% { height: 10%; } 45% { height: 65%; } 50% { height: 65%; } 95% { height: 10%; } 100% { height: 10%; } }
-        @keyframes streamFlow { 0% { height: 60px; opacity: 1; } 45% { height: 60px; opacity: 1; } 50% { height: 0; opacity: 0; } 55% { height: 0; opacity: 0; } 60% { height: 60px; opacity: 1; } 100% { height: 60px; opacity: 1; } }
+        @keyframes sandDrain { 0%{height:65%} 45%{height:5%} 50%{height:5%} 95%{height:65%} 100%{height:65%} }
+        @keyframes sandFill  { 0%{height:10%} 45%{height:65%} 50%{height:65%} 95%{height:10%} 100%{height:10%} }
+        @keyframes streamFlow { 0%{height:60px;opacity:1} 45%{height:60px;opacity:1} 50%{height:0;opacity:0} 55%{height:0;opacity:0} 60%{height:60px;opacity:1} 100%{height:60px;opacity:1} }
         .seal-glow { animation: glowPulse 1.2s ease-out; }
-        @keyframes glowPulse { 0% { filter: drop-shadow(0 0 0px #e8c070); } 50% { filter: drop-shadow(0 0 20px #e8c070); } 100% { filter: drop-shadow(0 0 0px #e8c070); } }
+        @keyframes glowPulse { 0%{filter:drop-shadow(0 0 0px #e8c070)} 50%{filter:drop-shadow(0 0 20px #e8c070)} 100%{filter:drop-shadow(0 0 0px #e8c070)} }
         .hourglass-label { margin-top: 20px; font-size: 13px; color: var(--brown-lt); font-style: italic; letter-spacing: 1px; }
         .form-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 32px; width: 100%; max-width: 520px; box-shadow: 0 4px 24px var(--shadow); }
         .form-box h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 24px; text-align: center; color: var(--brown); }
@@ -71,7 +71,7 @@
 </audio>
 
 <button id="logoutBtn">Sign Out</button>
-<button id="dashboardBtn">My Capsules →</button>
+<button id="dashboardBtn">My Capsules</button>
 <button id="music-btn">🎵</button>
 
 <header>
@@ -104,7 +104,7 @@
     <button id="sealBtn">🔒 Seal Memory</button>
     <p id="status" class="status"></p>
     <div class="back-link">
-        <a onclick="window.location.href='dashboard.html'">← Back to Dashboard</a>
+        <a onclick="window.location.href='dashboard.html'">Back to Dashboard</a>
     </div>
 </div>
 
@@ -115,7 +115,7 @@
     import { supabase } from './supabase.js';
     import { init as initNotif } from './notifications.js';
 
-    const BUCKET = 'timecapsule'; // ← small letters — consistent sa profile.html
+    const BUCKET = 'timecapsule';
 
     const firebaseConfig = {
         apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
@@ -147,43 +147,68 @@
         window.location.href = 'dashboard.html';
     });
 
-    let isSealing = false; // ← protection para dili ma-double submit
+    // Helper: i-reset ang button ug flag
+    function resetBtn() {
+        isSealing = false;
+        const btn = document.getElementById("sealBtn");
+        btn.disabled = false;
+        btn.textContent = "🔒 Seal Memory";
+    }
+
+    let isSealing = false;
 
     document.getElementById("sealBtn").addEventListener("click", async () => {
-        if (isSealing) return; // ← kung nag-seal na — ignore ang second click
+
+        // STEP 1: Block dayon — bisan pag double-click
+        if (isSealing) return;
         isSealing = true;
-        const message  = document.getElementById("memoryText").value;
-        const file     = document.getElementById("memoryFile").files[0];
-        const date     = document.getElementById("openDate").value;
-        const statusEl = document.getElementById("status");
+
         const sealBtn  = document.getElementById("sealBtn");
+        const statusEl = document.getElementById("status");
         const outerEl  = document.getElementById("hourglassOuter");
 
-        if (!date) { statusEl.innerText = "Please set a date to open your memory."; return; }
-        if (!message && !file) { statusEl.innerText = "Please add a message or upload a file."; return; }
-
-        const user = auth.currentUser;
-        if (!user) { statusEl.innerText = "Not logged in!"; return; }
-
+        // STEP 2: Disable button DAYON — walay gap para double-click
         sealBtn.disabled = true;
         sealBtn.textContent = "Sealing...";
+
+        // STEP 3: Kuhaon ang values
+        const message = document.getElementById("memoryText").value.trim();
+        const file    = document.getElementById("memoryFile").files[0];
+        const date    = document.getElementById("openDate").value;
+
+        // STEP 4: Validation — i-reset kung invalid
+        if (!date) {
+            statusEl.innerText = "Please set a date to open your memory.";
+            resetBtn();
+            return;
+        }
+        if (!message && !file) {
+            statusEl.innerText = "Please add a message or upload a file.";
+            resetBtn();
+            return;
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+            statusEl.innerText = "Not logged in!";
+            resetBtn();
+            return;
+        }
+
         statusEl.innerText = "Saving your memory...";
 
         try {
             let filePath = null;
             let fileUrl  = null;
 
+            // STEP 5: Upload file kung naa
             if (file) {
                 statusEl.innerText = "Uploading file...";
-
-                // ── Clean filename — remove spaces ug special chars ──
                 const ext      = file.name.split('.').pop().toLowerCase();
                 const fileName = user.uid + '/' + Date.now() + '.' + ext;
 
                 const { data: uploadData, error: uploadError } =
-                    await supabase.storage
-                        .from(BUCKET)
-                        .upload(fileName, file);
+                    await supabase.storage.from(BUCKET).upload(fileName, file);
 
                 if (uploadError) throw uploadError;
 
@@ -192,17 +217,24 @@
                 fileUrl = urlData.publicUrl;
             }
 
-            // ── Generate unique seal token para dili ma-duplicate ──
-            const sealToken = user.uid + '_' + date + '_' + (message || '').slice(0, 20);
-            const recentKey = 'last_seal_' + sealToken;
-            if (localStorage.getItem(recentKey)) {
-                statusEl.innerText = "Already sealed! Redirecting...";
-                setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+            // STEP 6: Server-side duplicate check
+            // Pangutana sa Supabase: naa na ba ni same user + date + message?
+            const { data: existing, error: checkError } = await supabase
+                .from('memories')
+                .select('id')
+                .eq('user_id', user.uid)
+                .eq('open_date', date)
+                .eq('message', message || null)
+                .limit(1);
+
+            // Kung naa na — dili mag-insert, redirect nalang
+            if (!checkError && existing && existing.length > 0) {
+                statusEl.innerText = "Memory already sealed! Redirecting...";
+                setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
                 return;
             }
-            localStorage.setItem(recentKey, '1');
-            setTimeout(() => localStorage.removeItem(recentKey), 10000);
 
+            // STEP 7: Insert sa database
             const { error: insertError } = await supabase
                 .from('memories')
                 .insert({
@@ -215,19 +247,23 @@
 
             if (insertError) throw insertError;
 
+            // STEP 8: Success!
             outerEl.classList.add("seal-glow");
             setTimeout(() => outerEl.classList.remove("seal-glow"), 1200);
             statusEl.innerText = "Memory sealed! 🎉 Redirecting...";
-            setTimeout(() => {
-                window.location.href = "dashboard.html?refresh=" + Date.now();
-            }, 1500);
+            setTimeout(() => { window.location.href = "dashboard.html"; }, 1500);
 
         } catch (err) {
             console.error(err);
-            statusEl.innerText = "Error: " + err.message;
-            sealBtn.disabled = false;
-            sealBtn.textContent = "🔒 Seal Memory";
-            isSealing = false; // ← reset kung naa error para pwede mag-try pag-usab
+            // Kung unique constraint violation — duplicate, redirect nalang
+            if (err.message && err.message.includes('unique_memory')) {
+                statusEl.innerText = "Memory already sealed! Redirecting...";
+                setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+            } else {
+                // Real error — i-reset para pwede mag-retry
+                statusEl.innerText = "Error: " + err.message;
+                resetBtn();
+            }
         }
     });
 

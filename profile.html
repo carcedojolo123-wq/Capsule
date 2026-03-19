@@ -330,9 +330,12 @@
                 try {
                     // ── STEP 1: I-delete ang file sa storage kung naa ──
                     if (filePath && filePath.trim() !== '') {
+                        console.log('Delete file path:', filePath);
+                        console.log('From bucket:', BUCKET);
                         const { error: storageError } = await supabase.storage
                             .from(BUCKET)  // ← TIMECAPSULE — correct na!
                             .remove([filePath]);
+                        console.log('Storage delete result:', storageError);
 
                         if (storageError) {
                             console.warn('Storage delete warning:', storageError.message);

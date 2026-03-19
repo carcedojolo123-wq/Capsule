@@ -23,7 +23,7 @@ const auth            = getAuth(firebaseApp);
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 function toManilaISO(localDatetimeStr) {
-    return new Date(localDatetimeStr).toISOString();
+    new Date(localDatetimeStr).toISOString();
 }
 
 // ── Auth state logger (para sa debugging) ──

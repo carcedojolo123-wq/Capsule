@@ -19,354 +19,74 @@
             --green:     #4a8b5f;
             --shadow:    rgba(74,50,32,0.10);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background: var(--bg);
-            font-family: 'Poppins', sans-serif;
-            color: var(--brown);
-            min-height: 100vh;
-        }
-
-        /* ── NAVBAR ── */
+        body { background: var(--bg); font-family: 'Poppins', sans-serif; color: var(--brown); min-height: 100vh; }
         .navbar {
-            background: var(--surface);
-            border-bottom: 1.5px solid var(--border);
-            padding: 0 32px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background: var(--surface); border-bottom: 1.5px solid var(--border);
+            padding: 0 32px; height: 64px; display: flex; align-items: center;
+            justify-content: space-between; position: sticky; top: 0; z-index: 100;
             box-shadow: 0 2px 12px var(--shadow);
         }
-        .navbar-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 3px;
-        }
+        .navbar-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; }
         .navbar-right { display: flex; align-items: center; gap: 12px; }
-        .btn-nav {
-            padding: 7px 18px;
-            border-radius: 20px;
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-            width: auto;
-            margin-top: 0;
-        }
+        .btn-nav { padding: 7px 18px; border-radius: 20px; border: none; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; font-weight: 500; transition: all 0.2s; width: auto; margin-top: 0; }
         .btn-back { background: transparent; border: 1.5px solid var(--border); color: var(--brown); }
         .btn-back:hover { background: var(--border); }
         .btn-logout { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
         .btn-logout:hover { background: var(--red); color: white; }
-
-        /* ── MAIN ── */
-        .main {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 40px 24px 80px;
-            display: none; /* hidden una — ipakita kung naka-login */
-        }
-
-        /* ── PAGE TITLE ── */
-        .page-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 26px;
-            margin-bottom: 6px;
-        }
-        .page-sub {
-            font-size: 13px;
-            color: var(--brown-lt);
-            margin-bottom: 36px;
-        }
-
-        /* ── SECTION CARD ── */
-        .section-card {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 18px;
-            padding: 28px;
-            margin-bottom: 24px;
-            box-shadow: 0 3px 14px var(--shadow);
-        }
-        .section-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--brown);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* ── FORM ELEMENTS ── */
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--brown-lt);
-            margin-bottom: 6px;
-            margin-top: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .main { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; display: none; }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 6px; }
+        .page-sub { font-size: 13px; color: var(--brown-lt); margin-bottom: 36px; }
+        .section-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 18px; padding: 28px; margin-bottom: 24px; box-shadow: 0 3px 14px var(--shadow); }
+        .section-title { font-size: 15px; font-weight: 700; color: var(--brown); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        label { display: block; font-size: 12px; font-weight: 600; color: var(--brown-lt); margin-bottom: 6px; margin-top: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
         label:first-of-type { margin-top: 0; }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="datetime-local"],
-        textarea {
-            width: 100%;
-            padding: 11px 14px;
-            background: #fdfaf3;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            color: var(--brown);
-            outline: none;
-            transition: border-color 0.2s;
+        input[type="text"], input[type="email"], input[type="password"], input[type="datetime-local"], textarea {
+            width: 100%; padding: 11px 14px; background: #fdfaf3; border: 1.5px solid var(--border);
+            border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; color: var(--brown); outline: none; transition: border-color 0.2s;
         }
         input:focus, textarea:focus { border-color: var(--brown-mid); }
         input:disabled { background: #f5ede0; color: var(--brown-lt); cursor: not-allowed; }
         textarea { resize: vertical; min-height: 80px; }
-
-        /* ── BUTTONS ── */
-        .btn-primary {
-            margin-top: 18px;
-            padding: 11px 24px;
-            background: var(--brown);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: auto;
-        }
+        .btn-primary { margin-top: 18px; padding: 11px 24px; background: var(--brown); color: white; border: none; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; width: auto; }
         .btn-primary:hover { background: var(--brown-mid); }
         .btn-primary:disabled { background: var(--brown-lt); cursor: not-allowed; }
-
-        .btn-danger {
-            margin-top: 18px;
-            padding: 11px 24px;
-            background: var(--red);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: auto;
-        }
+        .btn-danger { margin-top: 18px; padding: 11px 24px; background: var(--red); color: white; border: none; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; width: auto; }
         .btn-danger:hover { background: #9a3a3a; }
         .btn-danger:disabled { background: #d4a0a0; cursor: not-allowed; }
-
-        /* ── STATUS MESSAGE ── */
-        .status-msg {
-            margin-top: 12px;
-            font-size: 13px;
-            font-style: italic;
-            min-height: 18px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            display: none;
-        }
-        .status-msg.success {
-            display: block;
-            background: #eaf5ee;
-            color: var(--green);
-            border: 1px solid #b0dfc0;
-        }
-        .status-msg.error {
-            display: block;
-            background: #fdf0f0;
-            color: var(--red);
-            border: 1px solid #f0b0b0;
-        }
-        .status-msg.loading {
-            display: block;
-            background: #fef9f0;
-            color: var(--brown-lt);
-            border: 1px solid var(--border);
-        }
-
-        /* ── LOADING SPINNER (inline) ── */
-        .spinner-inline {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.4);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
+        .status-msg { margin-top: 12px; font-size: 13px; font-style: italic; min-height: 18px; padding: 8px 12px; border-radius: 8px; display: none; }
+        .status-msg.success { display: block; background: #eaf5ee; color: var(--green); border: 1px solid #b0dfc0; }
+        .status-msg.error   { display: block; background: #fdf0f0; color: var(--red); border: 1px solid #f0b0b0; }
+        .status-msg.loading { display: block; background: #fef9f0; color: var(--brown-lt); border: 1px solid var(--border); }
+        .spinner-inline { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 6px; vertical-align: middle; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── CAPSULE LIST (para sa edit/delete) ── */
         .capsule-list { display: flex; flex-direction: column; gap: 12px; }
-
-        .capsule-item {
-            background: #fdfaf3;
-            border: 1.5px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
+        .capsule-item { background: #fdfaf3; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
         .capsule-item-info { flex: 1; min-width: 0; }
-        .capsule-item-msg {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--brown);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .capsule-item-date {
-            font-size: 11px;
-            color: var(--brown-lt);
-            margin-top: 3px;
-        }
-        .capsule-item-badge {
-            font-size: 10px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 20px;
-            flex-shrink: 0;
-        }
+        .capsule-item-msg { font-size: 13px; font-weight: 600; color: var(--brown); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .capsule-item-date { font-size: 11px; color: var(--brown-lt); margin-top: 3px; }
+        .capsule-item-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; }
         .badge-locked { background: #fef3e2; color: #a07030; border: 1px solid #f0d090; }
         .badge-opened { background: #eaf5ee; color: var(--green); border: 1px solid #b0dfc0; }
-
         .capsule-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
-        .btn-edit, .btn-delete {
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            width: auto;
-            margin-top: 0;
-        }
+        .btn-edit, .btn-delete { padding: 5px 12px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; width: auto; margin-top: 0; }
         .btn-edit { background: #f0e8d8; color: var(--brown); border: 1px solid var(--border); }
         .btn-edit:hover { background: var(--border); }
         .btn-delete { background: #fdf0f0; color: var(--red); border: 1px solid #f0b0b0; }
         .btn-delete:hover { background: var(--red); color: white; }
-
-        /* ── EMPTY STATE ── */
-        .list-empty {
-            text-align: center;
-            padding: 24px;
-            color: var(--brown-lt);
-            font-size: 13px;
-        }
-
-        /* ── LOADING STATE (full list) ── */
-        .list-loading {
-            text-align: center;
-            padding: 24px;
-            color: var(--brown-lt);
-            font-size: 13px;
-        }
-        .list-spinner {
-            width: 24px; height: 24px;
-            border: 2px solid var(--border);
-            border-top-color: var(--brown);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        /* ── EDIT MODAL ── */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            padding: 20px;
-        }
+        .list-empty { text-align: center; padding: 24px; color: var(--brown-lt); font-size: 13px; }
+        .list-loading { text-align: center; padding: 24px; color: var(--brown-lt); font-size: 13px; }
+        .list-spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 10px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 999; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal-box {
-            background: var(--surface);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 480px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        .modal-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: var(--brown);
-        }
-        .modal-close {
-            position: absolute;
-            top: 16px; right: 20px;
-            background: none; border: none;
-            font-size: 20px; cursor: pointer;
-            color: var(--brown-lt);
-            width: auto; margin-top: 0; padding: 4px;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: flex-end;
-        }
-        .btn-cancel {
-            padding: 10px 20px;
-            background: transparent;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            color: var(--brown);
-            width: auto; margin-top: 0;
-        }
+        .modal-box { background: var(--surface); border-radius: 20px; padding: 30px; max-width: 480px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 20px; color: var(--brown); }
+        .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--brown-lt); width: auto; margin-top: 0; padding: 4px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+        .btn-cancel { padding: 10px 20px; background: transparent; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; color: var(--brown); width: auto; margin-top: 0; }
         .btn-cancel:hover { background: var(--border); }
-
-        /* ── MUSIC BTN ── */
-        #music-btn {
-            position: fixed;
-            bottom: 24px; right: 24px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            width: 48px; height: 48px;
-            font-size: 20px; cursor: pointer;
-            box-shadow: 0 4px 15px var(--shadow);
-            z-index: 998;
-            transition: transform 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        #music-btn { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 2px solid var(--border); border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px var(--shadow); z-index: 998; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
         #music-btn:hover { transform: scale(1.1); }
-
-        /* ── RESPONSIVE ── */
         @media (max-width: 640px) {
             .navbar { padding: 0 16px; }
             .main { padding: 24px 16px 60px; }
@@ -378,16 +98,13 @@
 </head>
 <body>
 
-<!-- Music -->
 <audio id="capsuleMusic" loop>
     <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
 </audio>
 <button id="music-btn">🎵</button>
 
-<!-- Notifications -->
 <script type="module" src="notifications.js"></script>
 
-<!-- NAVBAR -->
 <nav class="navbar">
     <div class="navbar-logo">CAPSULE</div>
     <div class="navbar-right">
@@ -396,116 +113,73 @@
     </div>
 </nav>
 
-<!-- MAIN CONTENT -->
 <div class="main" id="pageContent">
-
     <div class="page-title">My Profile</div>
     <p class="page-sub" id="pageSubtitle">Manage your account and capsules.</p>
 
-    <!-- ══════════════════════════════
-         SECTION 1 — ACCOUNT INFO
-    ══════════════════════════════ -->
     <div class="section-card">
         <div class="section-title">👤 Account Info</div>
-
         <label>Email Address</label>
         <input type="email" id="profileEmail" disabled>
-
         <label>Display Name</label>
         <input type="text" id="profileName" placeholder="Enter your name...">
-
-        <button class="btn-primary" id="saveNameBtn">
-            Save Name
-        </button>
+        <button class="btn-primary" id="saveNameBtn">Save Name</button>
         <div class="status-msg" id="nameStatus"></div>
     </div>
 
-    <!-- ══════════════════════════════
-         SECTION 2 — FORGOT PASSWORD
-    ══════════════════════════════ -->
     <div class="section-card">
         <div class="section-title">🔑 Change / Reset Password</div>
-
         <p style="font-size:13px; color:var(--brown-lt); margin-bottom:16px; line-height:1.6;">
-            Click the button below — mag-send kami og
-            <strong>password reset link</strong> sa imong email.
-            I-check ang imong inbox!
+            Click the button below — mag-send kami og <strong>password reset link</strong> sa imong email.
         </p>
-
-        <button class="btn-primary" id="resetPasswordBtn">
-            Send Reset Link to Email
-        </button>
+        <button class="btn-primary" id="resetPasswordBtn">Send Reset Link to Email</button>
         <div class="status-msg" id="resetStatus"></div>
     </div>
 
-    <!-- ══════════════════════════════
-         SECTION 3 — EDIT / DELETE CAPSULES
-    ══════════════════════════════ -->
     <div class="section-card">
         <div class="section-title">🗂️ My Capsules — Edit or Delete</div>
-
-        <!-- Loading state -->
         <div id="capsulesLoading" class="list-loading">
             <div class="list-spinner"></div>
             Loading your capsules...
         </div>
-
-        <!-- Capsule list -->
         <div class="capsule-list" id="capsuleList" style="display:none;"></div>
-
         <div class="status-msg" id="capsuleStatus"></div>
     </div>
 
-    <!-- ══════════════════════════════
-         SECTION 4 — DANGER ZONE
-    ══════════════════════════════ -->
     <div class="section-card" style="border-color: #f0b0b0;">
         <div class="section-title" style="color:var(--red);">⚠️ Danger Zone</div>
-
         <p style="font-size:13px; color:var(--brown-lt); margin-bottom:16px; line-height:1.6;">
-            Kung i-delete nimo ang imong account —
-            <strong>tanan imong capsules ug memories ma-delete permanent!</strong>
-            Dili na ma-undo ni.
+            Kung i-delete nimo ang imong account — <strong>tanan imong capsules ug memories ma-delete permanent!</strong>
         </p>
-
-        <button class="btn-danger" id="deleteAccountBtn">
-            Delete My Account
-        </button>
+        <button class="btn-danger" id="deleteAccountBtn">Delete My Account</button>
         <div class="status-msg" id="deleteAccountStatus"></div>
     </div>
-
 </div>
 
-<!-- ══ EDIT CAPSULE MODAL ══ -->
 <div class="modal-overlay" id="editModal">
     <div class="modal-box">
         <button class="modal-close" id="editModalClose">✕</button>
         <div class="modal-title">✏️ Edit Capsule</div>
-
         <input type="hidden" id="editCapsuleId">
-
         <label>Message</label>
         <textarea id="editMessage" placeholder="Write your memory..."></textarea>
-
         <label>Open Date</label>
         <input type="datetime-local" id="editOpenDate">
-
         <div class="modal-actions">
             <button class="btn-cancel" id="editCancelBtn">Cancel</button>
-            <button class="btn-primary" id="saveEditBtn" style="margin-top:0;">
-                Save Changes
-            </button>
+            <button class="btn-primary" id="saveEditBtn" style="margin-top:0;">Save Changes</button>
         </div>
         <div class="status-msg" id="editStatus"></div>
     </div>
 </div>
 
-<!-- SCRIPTS -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut, sendPasswordResetEmail, deleteUser }
         from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
     import { supabase } from './supabase.js';
+
+    const BUCKET = 'TIMECAPSULE'; // ← CORRECT bucket name — same sa Capsuleinside.html
 
     const firebaseConfig = {
         apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
@@ -521,25 +195,16 @@
     const auth = getAuth(app);
     let currentUser = null;
 
-    // ══════════════════════════
-    // HELPER: Show status message
-    // ══════════════════════════
     function showStatus(elementId, message, type) {
-        // type = 'success', 'error', 'loading'
         const el = document.getElementById(elementId);
         el.textContent = message;
-        el.className   = 'status-msg ' + type;
+        el.className = 'status-msg ' + type;
     }
-
     function hideStatus(elementId) {
         const el = document.getElementById(elementId);
         el.className = 'status-msg';
         el.textContent = '';
     }
-
-    // ══════════════════════════
-    // HELPER: Loading button
-    // ══════════════════════════
     function setLoading(btnId, isLoading, originalText) {
         const btn = document.getElementById(btnId);
         if (isLoading) {
@@ -551,111 +216,54 @@
         }
     }
 
-    // ══════════════════════════
-    // AUTH GUARD
-    // ══════════════════════════
     onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-            window.location.href = 'examplesignin.html';
-            return;
-        }
-
+        if (!user) { window.location.href = 'examplesignin.html'; return; }
         currentUser = user;
-
-        // Show page
         document.getElementById('pageContent').style.display = 'block';
         document.getElementById('profileEmail').value = user.email;
-        document.getElementById('pageSubtitle').textContent =
-            'Managing account for ' + user.email;
-
-        // Load display name kung naa
+        document.getElementById('pageSubtitle').textContent = 'Managing account for ' + user.email;
         const savedName = localStorage.getItem('capsule_name_' + user.uid);
-        if (savedName) {
-            document.getElementById('profileName').value = savedName;
-        }
-
-        // Load capsules
+        if (savedName) document.getElementById('profileName').value = savedName;
         await loadCapsules(user.uid);
     });
 
-    // ══════════════════════════
-    // LOGOUT
-    // ══════════════════════════
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         await signOut(auth);
         window.location.href = 'examplesignin.html';
     });
 
-    // ══════════════════════════
-    // SECTION 1 — SAVE NAME
-    // ══════════════════════════
     document.getElementById('saveNameBtn').addEventListener('click', () => {
         const name = document.getElementById('profileName').value.trim();
-
-        if (!name) {
-            showStatus('nameStatus', 'Please enter a display name.', 'error');
-            return;
-        }
-
-        // I-save sa localStorage
+        if (!name) { showStatus('nameStatus', 'Please enter a display name.', 'error'); return; }
         localStorage.setItem('capsule_name_' + currentUser.uid, name);
         showStatus('nameStatus', '✅ Name saved successfully!', 'success');
-
-        // Auto-hide after 3 seconds
         setTimeout(() => hideStatus('nameStatus'), 3000);
     });
 
-    // ══════════════════════════
-    // SECTION 2 — FORGOT PASSWORD
-    // Mag-send og reset link sa email
-    // ══════════════════════════
     document.getElementById('resetPasswordBtn').addEventListener('click', async () => {
         setLoading('resetPasswordBtn', true, 'Send Reset Link to Email');
         hideStatus('resetStatus');
-
         try {
-            // I-send ang password reset email gamit Firebase
             await sendPasswordResetEmail(auth, currentUser.email);
-
-            showStatus('resetStatus',
-                '✅ Reset link sent to ' + currentUser.email + '! Check your inbox.',
-                'success'
-            );
-
+            showStatus('resetStatus', '✅ Reset link sent to ' + currentUser.email + '!', 'success');
         } catch (error) {
-            console.error(error);
-            showStatus('resetStatus',
-                '❌ Failed to send reset link: ' + error.message,
-                'error'
-            );
+            showStatus('resetStatus', '❌ Failed: ' + error.message, 'error');
         }
-
         setLoading('resetPasswordBtn', false, 'Send Reset Link to Email');
     });
 
-    // ══════════════════════════
-    // SECTION 3 — LOAD CAPSULES
-    // Para sa edit/delete list
-    // ══════════════════════════
     async function loadCapsules(userId) {
-        // Show loading spinner
         document.getElementById('capsulesLoading').style.display = 'block';
         document.getElementById('capsuleList').style.display = 'none';
 
         const { data: capsules, error } = await supabase
-            .from('memories')
-            .select('*')
-            .eq('user_id', userId)
+            .from('memories').select('*').eq('user_id', userId)
             .order('open_date', { ascending: false });
 
-        // Hide loading spinner
         document.getElementById('capsulesLoading').style.display = 'none';
         document.getElementById('capsuleList').style.display = 'flex';
 
-        if (error) {
-            showStatus('capsuleStatus', '❌ Could not load capsules.', 'error');
-            return;
-        }
+        if (error) { showStatus('capsuleStatus', '❌ Could not load capsules.', 'error'); return; }
 
         const list = document.getElementById('capsuleList');
         list.innerHTML = '';
@@ -666,96 +274,89 @@
         }
 
         const now = new Date();
-
         capsules.forEach(capsule => {
-            const isLocked  = new Date(capsule.open_date) > now;
+            const isLocked = new Date(capsule.open_date) > now;
             const dateLabel = new Date(capsule.open_date).toLocaleDateString('en-PH', {
                 year: 'numeric', month: 'short', day: 'numeric'
             });
-
             const item = document.createElement('div');
             item.className = 'capsule-item';
             item.innerHTML = `
                 <div class="capsule-item-info">
-                    <div class="capsule-item-msg">
-                        ${capsule.message || '(No message)'}
-                    </div>
+                    <div class="capsule-item-msg">${capsule.message || '(No message)'}</div>
                     <div class="capsule-item-date">📅 Opens: ${dateLabel}</div>
                 </div>
                 <span class="capsule-item-badge ${isLocked ? 'badge-locked' : 'badge-opened'}">
                     ${isLocked ? '🔒 Locked' : '🎁 Opened'}
                 </span>
                 <div class="capsule-item-actions">
-                    <button class="btn-edit" data-id="${capsule.id}"
+                    <button class="btn-edit"
+                        data-id="${capsule.id}"
                         data-message="${(capsule.message || '').replace(/"/g, '&quot;')}"
-                        data-date="${capsule.open_date}">
-                        ✏️ Edit
-                    </button>
-                    <button class="btn-delete" data-id="${capsule.id}"
-                        data-path="${capsule.file_path || ''}">
-                        🗑️ Delete
-                    </button>
+                        data-date="${capsule.open_date}">✏️ Edit</button>
+                    <button class="btn-delete"
+                        data-id="${capsule.id}"
+                        data-path="${capsule.file_path || ''}">🗑️ Delete</button>
                 </div>
             `;
-
             list.appendChild(item);
         });
 
-        // ── EDIT BUTTON CLICK ──
+        // ── EDIT ──
         list.querySelectorAll('.btn-edit').forEach(btn => {
             btn.addEventListener('click', () => {
-                // I-populate ang edit modal
-                document.getElementById('editCapsuleId').value  = btn.dataset.id;
-                document.getElementById('editMessage').value    = btn.dataset.message;
-                // Convert sa datetime-local format
+                document.getElementById('editCapsuleId').value = btn.dataset.id;
+                document.getElementById('editMessage').value = btn.dataset.message;
                 const dt = new Date(btn.dataset.date);
-                const localDt = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000)
-                    .toISOString().slice(0, 16);
+                const localDt = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
                 document.getElementById('editOpenDate').value = localDt;
-
-                // Open modal
                 document.getElementById('editModal').classList.add('active');
                 hideStatus('editStatus');
             });
         });
 
-        // ── DELETE BUTTON CLICK ──
+        // ── DELETE ──
         list.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const capsuleId = btn.dataset.id;
                 const filePath  = btn.dataset.path;
 
-                // Confirmation dialog
-                const confirmed = confirm(
-                    'Are you sure you want to delete this capsule?\n' +
-                    'This cannot be undone!'
-                );
+                const confirmed = confirm('Are you sure you want to delete this capsule?\nThis cannot be undone!');
                 if (!confirmed) return;
 
-                // Show loading sa button
-                btn.disabled    = true;
+                btn.disabled = true;
                 btn.textContent = '⏳';
 
                 try {
-                    // ── STEP 1: I-delete ang file sa Supabase Storage kung naa ──
-                    if (filePath) {
-                        await supabase.storage
-                            .from('timecapsule')
+                    // ── STEP 1: I-delete ang file sa storage kung naa ──
+                    if (filePath && filePath.trim() !== '') {
+                        const { error: storageError } = await supabase.storage
+                            .from(BUCKET)  // ← TIMECAPSULE — correct na!
                             .remove([filePath]);
+
+                        if (storageError) {
+                            console.warn('Storage delete warning:', storageError.message);
+                            // Continue pa gihapon — i-delete ang database record
+                        }
                     }
 
-                    // ── STEP 2: I-delete ang record sa database ──
-                    const { error } = await supabase
+                    // ── STEP 2: I-delete ang database record ──
+                    const { error: dbError } = await supabase
                         .from('memories')
                         .delete()
-                        .eq('id', capsuleId);
+                        .eq('id', capsuleId)
+                        .eq('user_id', currentUser.uid); // extra security
 
-                    if (error) throw error;
+                    if (dbError) throw dbError;
 
-                    // ── STEP 3: I-remove ang item sa UI ──
+                    // ── STEP 3: I-remove sa UI ──
                     btn.closest('.capsule-item').remove();
 
-                    // Kung empty na ang list
+                    // Also remove from notif localStorage
+                    const shownIds = JSON.parse(localStorage.getItem('capsule_shown_notifs') || '[]');
+                    const filtered = shownIds.filter(id => id !== capsuleId);
+                    localStorage.setItem('capsule_shown_notifs', JSON.stringify(filtered));
+
                     const remaining = list.querySelectorAll('.capsule-item');
                     if (remaining.length === 0) {
                         list.innerHTML = '<div class="list-empty">🔒 No capsules yet. Seal your first memory!</div>';
@@ -765,63 +366,41 @@
                     setTimeout(() => hideStatus('capsuleStatus'), 3000);
 
                 } catch (err) {
-                    console.error(err);
-                    btn.disabled    = false;
+                    console.error('Delete error:', err);
+                    btn.disabled = false;
                     btn.textContent = '🗑️ Delete';
-                    showStatus('capsuleStatus', '❌ Failed to delete capsule.', 'error');
+                    showStatus('capsuleStatus', '❌ Failed to delete: ' + err.message, 'error');
                 }
             });
         });
     }
 
-    // ══════════════════════════
-    // EDIT MODAL — Save Changes
-    // ══════════════════════════
+    // ── SAVE EDIT ──
     document.getElementById('saveEditBtn').addEventListener('click', async () => {
         const capsuleId = document.getElementById('editCapsuleId').value;
         const message   = document.getElementById('editMessage').value.trim();
         const openDate  = document.getElementById('editOpenDate').value;
-
-        if (!openDate) {
-            showStatus('editStatus', 'Please set an open date.', 'error');
-            return;
-        }
-
+        if (!openDate) { showStatus('editStatus', 'Please set an open date.', 'error'); return; }
         setLoading('saveEditBtn', true, 'Save Changes');
         hideStatus('editStatus');
-
         try {
-            const { error } = await supabase
-                .from('memories')
-                .update({
-                    message:   message,
-                    open_date: openDate,
-                    // I-reset ang is_notified para mo-notify pag-usab kung na-change ang date
-                    is_notified: false
-                })
+            const { error } = await supabase.from('memories')
+                .update({ message, open_date: openDate, is_notified: false })
                 .eq('id', capsuleId);
-
             if (error) throw error;
-
             showStatus('editStatus', '✅ Capsule updated!', 'success');
-
-            // Close modal after 1.5 seconds ug reload ang list
             setTimeout(async () => {
                 document.getElementById('editModal').classList.remove('active');
                 await loadCapsules(currentUser.uid);
                 showStatus('capsuleStatus', '✅ Capsule updated successfully!', 'success');
                 setTimeout(() => hideStatus('capsuleStatus'), 3000);
             }, 1500);
-
         } catch (err) {
-            console.error(err);
             showStatus('editStatus', '❌ Failed to update: ' + err.message, 'error');
         }
-
         setLoading('saveEditBtn', false, 'Save Changes');
     });
 
-    // Close edit modal
     document.getElementById('editModalClose').addEventListener('click', () => {
         document.getElementById('editModal').classList.remove('active');
     });
@@ -829,31 +408,14 @@
         document.getElementById('editModal').classList.remove('active');
     });
     document.getElementById('editModal').addEventListener('click', (e) => {
-        if (e.target.id === 'editModal') {
-            e.target.classList.remove('active');
-        }
+        if (e.target.id === 'editModal') e.target.classList.remove('active');
     });
 
-    // ══════════════════════════
-    // SECTION 4 — DELETE ACCOUNT
-    // ══════════════════════════
+    // ── DELETE ACCOUNT ──
     document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
-        // Double confirmation para sa safety
-        const confirmed1 = confirm(
-            '⚠️ DELETE ACCOUNT\n\n' +
-            'This will permanently delete:\n' +
-            '• Your account\n' +
-            '• ALL your capsules and memories\n' +
-            '• ALL your uploaded files\n\n' +
-            'Are you sure?'
-        );
+        const confirmed1 = confirm('⚠️ DELETE ACCOUNT\n\nThis will permanently delete:\n• Your account\n• ALL your capsules\n• ALL your uploaded files\n\nAre you sure?');
         if (!confirmed1) return;
-
-        const confirmed2 = confirm(
-            'Last warning!\n\n' +
-            'This CANNOT be undone.\n' +
-            'Delete your account?'
-        );
+        const confirmed2 = confirm('Last warning!\n\nThis CANNOT be undone.\nDelete your account?');
         if (!confirmed2) return;
 
         setLoading('deleteAccountBtn', true, 'Delete My Account');
@@ -862,79 +424,53 @@
         try {
             const userId = currentUser.uid;
 
-            // ── STEP 1: I-delete tanan files sa Storage ──
-            const { data: files } = await supabase.storage
-                .from('timecapsule')
-                .list(userId);
-
+            // Delete all files from storage
+            const { data: files } = await supabase.storage.from(BUCKET).list(userId);
             if (files && files.length > 0) {
                 const filePaths = files.map(f => userId + '/' + f.name);
-                await supabase.storage.from('timecapsule').remove(filePaths);
+                await supabase.storage.from(BUCKET).remove(filePaths);
             }
 
-            // ── STEP 2: I-delete tanan memories sa database ──
-            await supabase
-                .from('memories')
-                .delete()
-                .eq('user_id', userId);
+            // Delete all memories from database
+            await supabase.from('memories').delete().eq('user_id', userId);
 
-            // ── STEP 3: I-delete ang Firebase account ──
+            // Delete Firebase account
             await deleteUser(currentUser);
 
-            // ── STEP 4: Redirect sa login page ──
+            // Clear localStorage
+            localStorage.removeItem('capsule_shown_notifs');
+
             alert('Your account has been deleted. Goodbye! 👋');
             window.location.href = 'examplesignin.html';
 
         } catch (err) {
             console.error(err);
-
-            // Kung error kay kinahanglan mag-re-login una
             if (err.code === 'auth/requires-recent-login') {
-                showStatus('deleteAccountStatus',
-                    '❌ For security, please log out and log back in first before deleting your account.',
-                    'error'
-                );
+                showStatus('deleteAccountStatus', '❌ Please log out and log back in first before deleting your account.', 'error');
             } else {
-                showStatus('deleteAccountStatus',
-                    '❌ Failed to delete account: ' + err.message,
-                    'error'
-                );
+                showStatus('deleteAccountStatus', '❌ Failed: ' + err.message, 'error');
             }
             setLoading('deleteAccountBtn', false, 'Delete My Account');
         }
     });
 
-    // ══════════════════════════
-    // MUSIC TOGGLE
-    // ══════════════════════════
+    // ── MUSIC ──
     const music    = document.getElementById('capsuleMusic');
     const musicBtn = document.getElementById('music-btn');
     let isPlaying  = false;
-
     musicBtn.addEventListener('click', () => {
-        if (isPlaying) {
-            music.pause();
-            isPlaying = false;
-            musicBtn.textContent = '🔇';
-        } else {
-            music.play();
-            isPlaying = true;
-            musicBtn.textContent = '🎵';
-        }
+        if (isPlaying) { music.pause(); isPlaying = false; musicBtn.textContent = '🔇'; }
+        else { music.play(); isPlaying = true; musicBtn.textContent = '🎵'; }
     });
-
 </script>
 
-    <script>
-    
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/Capsule/sw.js')
-            .then(() =>console.log('SW registered!'))
-            .catch(err => console.log('SW error', err));
-    
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/Capsule/sw.js')
+        .then(() => console.log('SW registered!'))
+        .catch(err => console.log('SW error', err));
     }
-
-    </script>
+</script>
 
 </body>
 </html>

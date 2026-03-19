@@ -333,7 +333,7 @@
                         console.log('Delete file path:', filePath);
                         console.log('From bucket:', BUCKET);
                         const { error: storageError } = await supabase.storage
-                            .from(BUCKET)  // ← TIMECAPSULE — correct na!
+                            .from(BUCKET)  
                             .remove([filePath]);
                         console.log('Storage delete result:', storageError);
 

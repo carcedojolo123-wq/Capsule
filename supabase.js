@@ -32,9 +32,7 @@ function toManilaISO(localDatetimeStr) {
 }
 
 // ✅ Seal Memory button
-const sealBtn = document.getElementById("sealBtn");
-if (sealBtn) {
-    sealBtn.addEventListener("click", async () => {
+
 
         const user = auth.currentUser;
         if (!user) {

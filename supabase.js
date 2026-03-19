@@ -22,6 +22,15 @@ const firebaseApp     = initializeApp(firebaseConfig);
 const auth            = getAuth(firebaseApp);
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
+// ✅ HELPER — Convert local datetime-local value to proper ISO string
+// Kini ang nag-solve sa timezone problem —
+// Ang datetime-local input nag-give og "2026-03-14T22:03" (wala timezone)
+// I-treat nato siya as Philippine Time (UTC+8) ug i-convert sa UTC para sa Supabase
+function toManilaISO(localDatetimeStr) {
+    // Idugang ang ":00+08:00" para ma-treat as Philippine Time
+    return new Date(localDatetimeStr + ':00+08:00').toISOString();
+}
+
 // ── Auth state logger (para sa debugging) ──
 onAuthStateChanged(auth, (user) => {
     if (user) {

@@ -19,405 +19,94 @@
             --sand:      #d4a96a;
             --shadow:    rgba(74,50,32,0.12);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background: var(--bg);
-            font-family: 'Poppins', sans-serif;
-            color: var(--brown);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px 80px;
-        }
-
-        /* ── HEADER ── */
-        header {
-            text-align: center;
-            margin-bottom: 36px;
-        }
-        header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            letter-spacing: 6px;
-            color: var(--brown);
-            margin-bottom: 6px;
-        }
-        .subtitle {
-            font-size: 13px;
-            color: var(--brown-lt);
-            letter-spacing: 1px;
-        }
-        
-        .hourglass-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .hourglass-outer {
-            position: relative;
-            width: 100px;
-            height: 180px;
-        }
-
-        /* Top stand */
-        .hg-stand-top, .hg-stand-bottom {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 110px;
-            height: 12px;
-            background: var(--brown-mid);
-            border-radius: 6px;
-            z-index: 10;
-        }
+        body { background: var(--bg); font-family: 'Poppins', sans-serif; color: var(--brown); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px 80px; }
+        header { text-align: center; margin-bottom: 36px; }
+        header h1 { font-family: 'Playfair Display', serif; font-size: 3rem; letter-spacing: 6px; color: var(--brown); margin-bottom: 6px; }
+        .subtitle { font-size: 13px; color: var(--brown-lt); letter-spacing: 1px; }
+        .hourglass-wrapper { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; }
+        .hourglass-outer { position: relative; width: 100px; height: 180px; }
+        .hg-stand-top, .hg-stand-bottom { position: absolute; left: 50%; transform: translateX(-50%); width: 110px; height: 12px; background: var(--brown-mid); border-radius: 6px; z-index: 10; }
         .hg-stand-top  { top: -6px; }
         .hg-stand-bottom { bottom: -6px; }
-
-        /* Glass shape using SVG clip */
-        .hg-glass {
-            position: absolute;
-            top: 6px; left: 0;
-            width: 100px;
-            height: 168px;
-            overflow: hidden;
-        }
-
-        /* Top chamber */
-        .hg-top {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 50%;
-            background: rgba(255,255,255,0.25);
-            border: 3px solid var(--brown-mid);
-            border-bottom: none;
-            border-radius: 50px 50px 0 0;
-            overflow: hidden;
-        }
-
-        /* Bottom chamber */
-        .hg-bottom {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%;
-            height: 50%;
-            background: rgba(255,255,255,0.25);
-            border: 3px solid var(--brown-mid);
-            border-top: none;
-            border-radius: 0 0 50px 50px;
-            overflow: hidden;
-        }
-
-        /* Neck connector */
-        .hg-neck {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 16px;
-            background: var(--brown-mid);
-            z-index: 5;
-        }
-
-        /* Sand in top chamber — drains down */
-        .hg-sand-top {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%;
-            height: 65%;
-            background: linear-gradient(180deg, #e8c070 0%, var(--sand) 100%);
-            border-radius: 0 0 40px 40px;
-            animation: sandDrain 8s ease-in-out infinite;
-        }
-
-        /* Sand in bottom chamber — fills up */
-        .hg-sand-bottom {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%;
-            height: 10%;
-            background: linear-gradient(180deg, #e8c070 0%, var(--sand) 100%);
-            border-radius: 0 0 40px 40px;
-            animation: sandFill 8s ease-in-out infinite;
-        }
-
-        /* Falling sand stream */
-        .hg-stream {
-            position: absolute;
-            top: 48%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            background: linear-gradient(180deg, var(--sand), #e8c070);
-            border-radius: 2px;
-            animation: streamFlow 8s ease-in-out infinite;
-            z-index: 6;
-        }
-
-        @keyframes sandDrain {
-            0%   { height: 65%; }
-            45%  { height: 5%;  }
-            50%  { height: 5%;  }
-            95%  { height: 65%; }
-            100% { height: 65%; }
-        }
-
-        @keyframes sandFill {
-            0%   { height: 10%; }
-            45%  { height: 65%; }
-            50%  { height: 65%; }
-            95%  { height: 10%; }
-            100% { height: 10%; }
-        }
-
-        @keyframes streamFlow {
-            0%   { height: 60px; opacity: 1; }
-            45%  { height: 60px; opacity: 1; }
-            50%  { height: 0;    opacity: 0; }
-            55%  { height: 0;    opacity: 0; }
-            60%  { height: 60px; opacity: 1; }
-            100% { height: 60px; opacity: 1; }
-        }
-
-        /* Seal animation glow */
-        .hg-glass.seal-animation .hg-sand-top,
-        .hg-glass.seal-animation .hg-sand-bottom {
-            background: linear-gradient(180deg, #f0d060 0%, #e8a820 100%);
-        }
-        .seal-glow {
-            animation: glowPulse 1.2s ease-out;
-        }
-        @keyframes glowPulse {
-            0%   { filter: drop-shadow(0 0 0px #e8c070); }
-            50%  { filter: drop-shadow(0 0 20px #e8c070); }
-            100% { filter: drop-shadow(0 0 0px #e8c070); }
-        }
-
-        .hourglass-label {
-            margin-top: 20px;
-            font-size: 13px;
-            color: var(--brown-lt);
-            font-style: italic;
-            letter-spacing: 1px;
-        }
-
-        /* ── FORM BOX ── */
-        .form-box {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 20px;
-            padding: 32px;
-            width: 100%;
-            max-width: 520px;
-            box-shadow: 0 4px 24px var(--shadow);
-        }
-
-        .form-box h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            margin-bottom: 24px;
-            text-align: center;
-            color: var(--brown);
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--brown);
-            margin-bottom: 6px;
-            margin-top: 18px;
-        }
-
-        textarea,
-        input[type="file"],
-        input[type="datetime-local"] {
-            width: 100%;
-            padding: 12px;
-            background: #fdfaf3;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            color: var(--brown);
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        textarea:focus,
-        input[type="datetime-local"]:focus {
-            border-color: var(--brown-mid);
-        }
+        .hg-glass { position: absolute; top: 6px; left: 0; width: 100px; height: 168px; overflow: hidden; }
+        .hg-top { position: absolute; top: 0; left: 0; width: 100%; height: 50%; background: rgba(255,255,255,0.25); border: 3px solid var(--brown-mid); border-bottom: none; border-radius: 50px 50px 0 0; overflow: hidden; }
+        .hg-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 50%; background: rgba(255,255,255,0.25); border: 3px solid var(--brown-mid); border-top: none; border-radius: 0 0 50px 50px; overflow: hidden; }
+        .hg-neck { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 12px; height: 16px; background: var(--brown-mid); z-index: 5; }
+        .hg-sand-top { position: absolute; bottom: 0; left: 0; width: 100%; height: 65%; background: linear-gradient(180deg, #e8c070 0%, var(--sand) 100%); border-radius: 0 0 40px 40px; animation: sandDrain 8s ease-in-out infinite; }
+        .hg-sand-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 10%; background: linear-gradient(180deg, #e8c070 0%, var(--sand) 100%); border-radius: 0 0 40px 40px; animation: sandFill 8s ease-in-out infinite; }
+        .hg-stream { position: absolute; top: 48%; left: 50%; transform: translateX(-50%); width: 3px; background: linear-gradient(180deg, var(--sand), #e8c070); border-radius: 2px; animation: streamFlow 8s ease-in-out infinite; z-index: 6; }
+        @keyframes sandDrain { 0% { height: 65%; } 45% { height: 5%; } 50% { height: 5%; } 95% { height: 65%; } 100% { height: 65%; } }
+        @keyframes sandFill { 0% { height: 10%; } 45% { height: 65%; } 50% { height: 65%; } 95% { height: 10%; } 100% { height: 10%; } }
+        @keyframes streamFlow { 0% { height: 60px; opacity: 1; } 45% { height: 60px; opacity: 1; } 50% { height: 0; opacity: 0; } 55% { height: 0; opacity: 0; } 60% { height: 60px; opacity: 1; } 100% { height: 60px; opacity: 1; } }
+        .seal-glow { animation: glowPulse 1.2s ease-out; }
+        @keyframes glowPulse { 0% { filter: drop-shadow(0 0 0px #e8c070); } 50% { filter: drop-shadow(0 0 20px #e8c070); } 100% { filter: drop-shadow(0 0 0px #e8c070); } }
+        .hourglass-label { margin-top: 20px; font-size: 13px; color: var(--brown-lt); font-style: italic; letter-spacing: 1px; }
+        .form-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 32px; width: 100%; max-width: 520px; box-shadow: 0 4px 24px var(--shadow); }
+        .form-box h2 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 24px; text-align: center; color: var(--brown); }
+        label { display: block; font-size: 13px; font-weight: 600; color: var(--brown); margin-bottom: 6px; margin-top: 18px; }
+        textarea, input[type="file"], input[type="datetime-local"] { width: 100%; padding: 12px; background: #fdfaf3; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 14px; color: var(--brown); outline: none; transition: border-color 0.2s; }
+        textarea:focus, input[type="datetime-local"]:focus { border-color: var(--brown-mid); }
         textarea { resize: vertical; min-height: 100px; }
-
-        /* Seal button */
-        #sealBtn {
-            margin-top: 24px;
-            width: 100%;
-            padding: 14px;
-            background: var(--brown);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: background 0.2s, transform 0.1s;
-        }
+        #sealBtn { margin-top: 24px; width: 100%; padding: 14px; background: var(--brown); border: none; border-radius: 12px; color: white; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: background 0.2s, transform 0.1s; }
         #sealBtn:hover { background: var(--brown-mid); }
         #sealBtn:active { transform: scale(0.98); }
         #sealBtn:disabled { background: var(--brown-lt); cursor: not-allowed; }
-
-        /* Status text */
-        .status {
-            margin-top: 16px;
-            text-align: center;
-            font-size: 13px;
-            font-style: italic;
-            color: var(--brown-mid);
-            min-height: 20px;
-        }
-
-        /* Back to dashboard link */
-        .back-link {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--brown-lt);
-        }
-        .back-link a {
-            color: var(--brown-mid);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        /* ── MUSIC BTN ── */
-        #music-btn {
-            position: fixed;
-            bottom: 24px; right: 24px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            width: 48px; height: 48px;
-            font-size: 20px; cursor: pointer;
-            box-shadow: 0 4px 15px var(--shadow);
-            z-index: 9999;
-            transition: transform 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .status { margin-top: 16px; text-align: center; font-size: 13px; font-style: italic; color: var(--brown-mid); min-height: 20px; }
+        .back-link { margin-top: 20px; text-align: center; font-size: 13px; color: var(--brown-lt); }
+        .back-link a { color: var(--brown-mid); text-decoration: underline; cursor: pointer; }
+        #music-btn { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 2px solid var(--border); border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px var(--shadow); z-index: 9999; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
         #music-btn:hover { transform: scale(1.1); }
-
-        /* ── LOGOUT BTN ── */
-        #logoutBtn {
-            position: fixed;
-            top: 20px; left: 24px;
-            background: transparent;
-            color: #b84a4a;
-            border: 1.5px solid #b84a4a;
-            border-radius: 20px;
-            padding: 7px 18px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            z-index: 9999;
-            transition: all 0.2s;
-            width: auto; margin-top: 0;
-        }
+        #logoutBtn { position: fixed; top: 20px; left: 24px; background: transparent; color: #b84a4a; border: 1.5px solid #b84a4a; border-radius: 20px; padding: 7px 18px; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; z-index: 9999; transition: all 0.2s; width: auto; margin-top: 0; }
         #logoutBtn:hover { background: #b84a4a; color: white; }
-
-        /* Dashboard link top right */
-        #dashboardBtn {
-            position: fixed;
-            top: 20px; right: 24px;
-            background: var(--brown);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 7px 18px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            cursor: pointer;
-            z-index: 9999;
-            transition: background 0.2s;
-            width: auto; margin-top: 0;
-        }
+        #dashboardBtn { position: fixed; top: 20px; right: 24px; background: var(--brown); color: white; border: none; border-radius: 20px; padding: 7px 18px; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; z-index: 9999; transition: background 0.2s; width: auto; margin-top: 0; }
         #dashboardBtn:hover { background: var(--brown-mid); }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 640px) {
-            header h1 { font-size: 2.2rem; }
-            .form-box { padding: 24px 18px; }
-        }
+        @media (max-width: 640px) { header h1 { font-size: 2.2rem; } .form-box { padding: 24px 18px; } }
     </style>
 </head>
 <body>
 
-<!-- Music -->
 <audio id="capsuleMusic" loop>
     <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
 </audio>
 
-<!-- Buttons -->
 <button id="logoutBtn">Sign Out</button>
 <button id="dashboardBtn">My Capsules →</button>
 <button id="music-btn">🎵</button>
 
-<!-- Header -->
 <header>
     <h1>CAPSULE</h1>
     <p class="subtitle">Seal your memories and open them in the future.</p>
 </header>
 
-<!-- Hourglass -->
 <div class="hourglass-wrapper">
     <div class="hourglass-outer" id="hourglassOuter">
         <div class="hg-stand-top"></div>
-
         <div class="hg-glass" id="hgGlass">
-            <div class="hg-top">
-                <div class="hg-sand-top"></div>
-            </div>
+            <div class="hg-top"><div class="hg-sand-top"></div></div>
             <div class="hg-neck"></div>
             <div class="hg-stream"></div>
-            <div class="hg-bottom">
-                <div class="hg-sand-bottom"></div>
-            </div>
+            <div class="hg-bottom"><div class="hg-sand-bottom"></div></div>
         </div>
-
         <div class="hg-stand-bottom"></div>
     </div>
     <p class="hourglass-label">Your Timecapsule</p>
 </div>
 
-<!-- Form -->
 <div class="form-box">
     <h2>Seal a Memory</h2>
-
     <label>Message</label>
     <textarea id="memoryText" placeholder="Write something you want to remember..."></textarea>
-
     <label>Upload Image / Video</label>
     <input type="file" id="memoryFile" accept="image/*,video/*">
-
     <label>Open Date</label>
     <input type="datetime-local" id="openDate">
-
     <button id="sealBtn">🔒 Seal Memory</button>
-
     <p id="status" class="status"></p>
-
     <div class="back-link">
         <a onclick="window.location.href='dashboard.html'">← Back to Dashboard</a>
     </div>
 </div>
-
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
@@ -425,6 +114,8 @@
         from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
     import { supabase } from './supabase.js';
     import { init as initNotif } from './notifications.js';
+
+    const BUCKET = 'timecapsule'; // ← small letters — consistent sa profile.html
 
     const firebaseConfig = {
         apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
@@ -439,28 +130,28 @@
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // AUTH GUARD
+    let authInitialized = false;
     onAuthStateChanged(auth, (user) => {
-    if (!user) {
-        window.location.href = 'examplesignin.html';
-        return;
-    }
-    initNotif(user.uid);
-});
+        if (authInitialized) return;
+        authInitialized = true;
+        if (!user) { window.location.href = 'examplesignin.html'; return; }
+        initNotif(user.uid);
+    });
 
-    // LOGOUT
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         await signOut(auth);
         window.location.href = 'examplesignin.html';
     });
 
-    // DASHBOARD
     document.getElementById('dashboardBtn').addEventListener('click', () => {
         window.location.href = 'dashboard.html';
     });
 
-    // SEAL BUTTON
+    let isSealing = false; // ← protection para dili ma-double submit
+
     document.getElementById("sealBtn").addEventListener("click", async () => {
+        if (isSealing) return; // ← kung nag-seal na — ignore ang second click
+        isSealing = true;
         const message  = document.getElementById("memoryText").value;
         const file     = document.getElementById("memoryFile").files[0];
         const date     = document.getElementById("openDate").value;
@@ -468,20 +159,11 @@
         const sealBtn  = document.getElementById("sealBtn");
         const outerEl  = document.getElementById("hourglassOuter");
 
-        if (!date) {
-            statusEl.innerText = "Please set a date to open your memory.";
-            return;
-        }
-        if (!message && !file) {
-            statusEl.innerText = "Please add a message or upload a file.";
-            return;
-        }
+        if (!date) { statusEl.innerText = "Please set a date to open your memory."; return; }
+        if (!message && !file) { statusEl.innerText = "Please add a message or upload a file."; return; }
 
         const user = auth.currentUser;
-        if (!user) {
-            statusEl.innerText = "Not logged in!";
-            return;
-        }
+        if (!user) { statusEl.innerText = "Not logged in!"; return; }
 
         sealBtn.disabled = true;
         sealBtn.textContent = "Sealing...";
@@ -493,21 +175,33 @@
 
             if (file) {
                 statusEl.innerText = "Uploading file...";
-                const ext      = file.name.split('.').pop();
+
+                // ── Clean filename — remove spaces ug special chars ──
+                const ext      = file.name.split('.').pop().toLowerCase();
                 const fileName = user.uid + '/' + Date.now() + '.' + ext;
 
                 const { data: uploadData, error: uploadError } =
                     await supabase.storage
-                        .from('timecapsule')
+                        .from(BUCKET)
                         .upload(fileName, file);
 
                 if (uploadError) throw uploadError;
 
                 filePath = uploadData.path;
-                const { data: urlData } =
-                    supabase.storage.from('timecapsule').getPublicUrl(filePath);
+                const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(filePath);
                 fileUrl = urlData.publicUrl;
             }
+
+            // ── Generate unique seal token para dili ma-duplicate ──
+            const sealToken = user.uid + '_' + date + '_' + (message || '').slice(0, 20);
+            const recentKey = 'last_seal_' + sealToken;
+            if (localStorage.getItem(recentKey)) {
+                statusEl.innerText = "Already sealed! Redirecting...";
+                setTimeout(() => { window.location.href = "dashboard.html"; }, 1000);
+                return;
+            }
+            localStorage.setItem(recentKey, '1');
+            setTimeout(() => localStorage.removeItem(recentKey), 10000);
 
             const { error: insertError } = await supabase
                 .from('memories')
@@ -516,7 +210,7 @@
                     message:   message || null,
                     file_path: filePath || null,
                     file_url:  fileUrl  || null,
-                    open_date: new Date(date).toISOString()
+                    open_date: date
                 });
 
             if (insertError) throw insertError;
@@ -524,47 +218,35 @@
             outerEl.classList.add("seal-glow");
             setTimeout(() => outerEl.classList.remove("seal-glow"), 1200);
             statusEl.innerText = "Memory sealed! 🎉 Redirecting...";
-
             setTimeout(() => {
-    window.location.href = "dashboard.html?refresh=" + Date.now();
-}, 1500);
+                window.location.href = "dashboard.html?refresh=" + Date.now();
+            }, 1500);
 
         } catch (err) {
             console.error(err);
             statusEl.innerText = "Error: " + err.message;
             sealBtn.disabled = false;
             sealBtn.textContent = "🔒 Seal Memory";
+            isSealing = false; // ← reset kung naa error para pwede mag-try pag-usab
         }
     });
 
-    // MUSIC
     const music    = document.getElementById('capsuleMusic');
     const musicBtn = document.getElementById('music-btn');
     let isPlaying  = false;
-
     musicBtn.addEventListener('click', () => {
-        if (isPlaying) {
-            music.pause();
-            isPlaying = false;
-            musicBtn.textContent = '🔇';
-        } else {
-            music.play();
-            isPlaying = true;
-            musicBtn.textContent = '🎵';
-        }
+        if (isPlaying) { music.pause(); isPlaying = false; musicBtn.textContent = '🔇'; }
+        else { music.play(); isPlaying = true; musicBtn.textContent = '🎵'; }
     });
 </script>
 
-    <script>
-    
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/Capsule/sw.js')
-            .then(() =>console.log('SW registered!'))
-            .catch(err => console.log('SW error', err));
-    
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/Capsule/sw.js')
+        .then(() => console.log('SW registered!'))
+        .catch(err => console.log('SW error', err));
     }
-
-    </script>
+</script>
 
 </body>
 </html>

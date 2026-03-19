@@ -208,7 +208,9 @@
                 const fileName = user.uid + '/' + btoa(message + date) + '.' + ext;
 
                 const { data: uploadData, error: uploadError } =
-                    await supabase.storage.from(BUCKET).upload(fileName, file);
+                    await supabase.storage
+                        .from(BUCKET)
+                        .upload(fileName, file, { upsert: false});
 
                 if (uploadError) throw uploadError;
 

@@ -276,12 +276,9 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('refresh')) {
-            await loadAllCapsules(user.uid);
             window.history.replaceState({}, '', 'dashboard.html');
-        } else {
-            await loadAllCapsules(user.uid);
         }
-
+        await loadAllCapsules(user.uid);
         initNotif(user.uid);
     });
 

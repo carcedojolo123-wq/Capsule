@@ -22,15 +22,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth        = getAuth(firebaseApp);
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Auth check
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        console.log("Logged in as:", user.email);
-    } else {
-        console.log("No user logged in");
-    }
-});
-
 // ✅ HELPER — Convert local datetime-local value to proper ISO string
 // Kini ang nag-solve sa timezone problem —
 // Ang datetime-local input nag-give og "2026-03-14T22:03" (wala timezone)
@@ -115,5 +106,14 @@ function toManilaISO(localDatetimeStr) {
         setTimeout(() => {
             window.location.href = "dashboard.html";
         }, 1500);
+}
+
+// Auth check
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("Logged in as:", user.email,"| UID:", user.uid);
+    } else {
+        console.log("No user logged in");
+    }
 });
 

@@ -216,6 +216,62 @@
         }
     }
 
+    // ── HELPER: Delete a file from Supabase storage ──
+    // Handles both full paths and partial paths automatically.
+    async function deleteStorageFile(filePath) {
+        if (!filePath) return { skipped: true };
+
+        console.log('🗑️ Attempting storage delete for path:', filePath);
+
+        // Normalize the path — strip leading slash if present
+        const normalized = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+
+        const { data, error } = await supabase.storage
+            .from(BUCKET)
+            .remove([normalized]);
+
+        if (error) {
+            console.error('❌ Storage delete error:', error);
+            return { error };
+        }
+
+        console.log('✅ Storage delete success:', data);
+        return { data };
+    }
+
+    // ── HELPER: List and delete ALL files under a user's folder ──
+    async function deleteAllStorageFilesForUser(userId) {
+        console.log('🗑️ Listing storage files for user:', userId);
+
+        const { data: files, error: listError } = await supabase.storage
+            .from(BUCKET)
+            .list(userId, { limit: 1000 });
+
+        if (listError) {
+            console.error('❌ Storage list error:', listError);
+            throw listError;
+        }
+
+        if (!files || files.length === 0) {
+            console.log('ℹ️ No files found in storage for user.');
+            return;
+        }
+
+        const filePaths = files.map(f => `${userId}/${f.name}`);
+        console.log('🗑️ Deleting files:', filePaths);
+
+        const { error: deleteError } = await supabase.storage
+            .from(BUCKET)
+            .remove(filePaths);
+
+        if (deleteError) {
+            console.error('❌ Bulk storage delete error:', deleteError);
+            throw deleteError;
+        }
+
+        console.log('✅ All storage files deleted for user:', userId);
+    }
+
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'examplesignin.html'; return; }
         currentUser = user;
@@ -295,8 +351,7 @@
                         data-message="${(capsule.message || '').replace(/"/g, '&quot;')}"
                         data-date="${capsule.open_date}">✏️ Edit</button>
                     <button class="btn-delete"
-                        data-id="${capsule.id}"
-                        data-path="${capsule.file_path || ''}">🗑️ Delete</button>
+                        data-id="${capsule.id}">🗑️ Delete</button>
                 </div>
             `;
             list.appendChild(item);
@@ -316,54 +371,55 @@
         });
 
         // ── DELETE ──
-list.querySelectorAll('.btn-delete').forEach(btn => {
-    btn.addEventListener('click', async () => {
-        const capsuleId = btn.dataset.id;
+        list.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const capsuleId = btn.dataset.id;
 
-        const confirmed = confirm('Are you sure you want to delete this capsule?\nThis cannot be undone!');
-        if (!confirmed) return;
+                const confirmed = confirm('Are you sure you want to delete this capsule?\nThis cannot be undone!');
+                if (!confirmed) return;
 
-        btn.disabled    = true;
-        btn.textContent = '⏳';
+                btn.disabled    = true;
+                btn.textContent = '⏳';
 
-        try {
-            // — Step 1: I-fetch ang file_path gikan sa database —
-            const { data: capsuleRecord } = await supabase
-                .from('memories')
-                .select('file_path')
-                .eq('id', capsuleId)
-                .single();
+                try {
+                    // ── Step 1: Fetch the full capsule record from DB ──
+                    // Always fetch fresh from DB so we get the real file_path,
+                    // not a stale/escaped value from the button dataset.
+                    const { data: capsuleRecord, error: fetchError } = await supabase
+                        .from('memories')
+                        .select('file_path, user_id')
+                        .eq('id', capsuleId)
+                        .single();
 
-            // — Step 2: I-delete sa storage kung naa file —
-            if (capsuleRecord?.file_path) {
-              const filePath = capsuleRecord.file_path;
+                    if (fetchError) {
+                        console.warn('⚠️ Could not fetch capsule record:', fetchError.message);
+                        // Non-fatal — continue with deletion even if we can't get the file path
+                    }
 
-              console.log('Deleting file:', filePath);
+                    // ── Step 2: Delete file from Supabase storage (if any) ──
+                    if (capsuleRecord?.file_path) {
+                        const { error: storageError } = await deleteStorageFile(capsuleRecord.file_path);
+                        if (storageError) {
+                            // Log but don't block DB delete — file may already be gone
+                            console.warn('⚠️ Storage delete failed (continuing anyway):', storageError.message);
+                        }
+                    } else {
+                        console.log('ℹ️ No file_path found for this capsule — skipping storage delete.');
+                    }
 
-              const { error: storageError } = await supabase.storage
-                .from(BUCKET)
-                .remove([filePath]);
+                    // ── Step 3: Delete the DB record ──
+                    const { error: dbError } = await supabase
+                        .from('memories')
+                        .delete()
+                        .eq('id', capsuleId)
+                        .eq('user_id', currentUser.uid);
 
-              if (storageError) {
-                console.error('Storage delete failed:', storageError);
-                throw storageError; // ← importante ni
-              }
-
-              console.log('✅ Storage delete success');
-            }
-
-            // — Step 3: I-delete sa database —
-            const { error: dbError } = await supabase
-                .from('memories')
-                .delete()
-                .eq('id', capsuleId)
-                .eq('user_id', currentUser.uid);
                     if (dbError) throw dbError;
 
-                    // ── Step 3: Remove sa UI ──
+                    // ── Step 4: Remove from UI ──
                     btn.closest('.capsule-item').remove();
 
-                    // ── Step 4: Clean up localStorage ──
+                    // ── Step 5: Clean up localStorage ──
                     const shownIds = JSON.parse(
                         localStorage.getItem('capsule_shown_notifs') || '[]'
                     );
@@ -372,7 +428,7 @@ list.querySelectorAll('.btn-delete').forEach(btn => {
                         JSON.stringify(shownIds.filter(id => id !== capsuleId))
                     );
 
-                    // ── Step 5: Check if empty na ──
+                    // ── Step 6: Show empty state if no more capsules ──
                     if (list.querySelectorAll('.capsule-item').length === 0) {
                         list.innerHTML = '<div class="list-empty">🔒 No capsules yet. Seal your first memory!</div>';
                     }
@@ -388,8 +444,7 @@ list.querySelectorAll('.btn-delete').forEach(btn => {
                 }
             });
         });
-
-    } 
+    }
 
     // ── SAVE EDIT ──
     document.getElementById('saveEditBtn').addEventListener('click', async () => {
@@ -440,25 +495,10 @@ list.querySelectorAll('.btn-delete').forEach(btn => {
         try {
             const userId = currentUser.uid;
 
-            // Step 1: I-list tanan files sa storage sa user's folder
-            const { data: files, error: listError } = await supabase.storage
-                .from(BUCKET)
-                .list(userId);
+            // Step 1: Delete ALL storage files for this user
+            await deleteAllStorageFilesForUser(userId);
 
-            if (listError) throw listError;
-
-            // Step 2: Delete tanan files
-            if (files && files.length > 0) {
-                const filePaths = files.map(f => `${userId}/${f.name}`);
-                const { error: deleteError } = await supabase.storage
-                    .from(BUCKET)
-                    .remove(filePaths);
-
-                if (deleteError) throw deleteError;
-                console.log('✅ Files deleted:', filePaths);
-            }
-
-            // Step 3: Delete tanan memories sa database
+            // Step 2: Delete all memories from DB
             const { error: dbError } = await supabase
                 .from('memories')
                 .delete()
@@ -466,10 +506,10 @@ list.querySelectorAll('.btn-delete').forEach(btn => {
 
             if (dbError) throw dbError;
 
-            // Step 4: Delete ang Firebase Auth account
+            // Step 3: Delete Firebase Auth account
             await deleteUser(currentUser);
 
-            // Step 5: Clean up localStorage
+            // Step 4: Clean up localStorage
             localStorage.removeItem('capsule_shown_notifs');
             localStorage.removeItem('capsule_name_' + userId);
 

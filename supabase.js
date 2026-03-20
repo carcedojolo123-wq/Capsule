@@ -31,7 +31,7 @@ onAuthStateChanged(auth, (user) => {
         console.log("Logged in as:", user.email, "| UID:", user.uid);
     } else {
         console.log("No user logged in");
-    
+    }
 });
 
 // ── WALA NAY SEAL BUTTON LOGIC DIRI ──

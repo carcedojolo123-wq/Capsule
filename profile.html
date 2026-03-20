@@ -443,53 +443,65 @@
 
     // ── DELETE ACCOUNT ──
     document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
-        const confirmed1 = confirm('⚠️ DELETE ACCOUNT\n\nThis will permanently delete:\n• Your account\n• ALL your capsules\n• ALL your uploaded files\n\nAre you sure?');
-        if (!confirmed1) return;
-        const confirmed2 = confirm('Last warning!\n\nThis CANNOT be undone.\nDelete your account?');
-        if (!confirmed2) return;
+    const confirmed1 = confirm('⚠️ DELETE ACCOUNT\n\nThis will permanently delete:\n• Your account\n• ALL your capsules\n• ALL your uploaded files\n\nAre you sure?');
+    if (!confirmed1) return;
+    const confirmed2 = confirm('Last warning!\n\nThis CANNOT be undone.\nDelete your account?');
+    if (!confirmed2) return;
 
-        setLoading('deleteAccountBtn', true, 'Delete My Account');
-        showStatus('deleteAccountStatus', '⏳ Deleting your account...', 'loading');
+    setLoading('deleteAccountBtn', true, 'Delete My Account');
+    showStatus('deleteAccountStatus', '⏳ Deleting your account...', 'loading');
 
-        try {
-            const userId = currentUser.uid;
-            const BUCKET = 'timecapsule';
+    try {
+        const userId = currentUser.uid;
 
-            if (listError) throw listError;
+        // Step 1: I-list tanan files sa storage sa user's folder
+        const { data: files, error: listError } = await supabase.storage
+            .from(BUCKET)
+            .list(userId);
 
-            // Delete all files from storage
-            const { data: files } = await supabase.storage.from(BUCKET).list(userId);
-            if (files && files.length > 0) {
-                const filePaths = files.map(f => userId + '/' + f.name);
-                await supabase.storage.from(BUCKET).remove(filePaths);
-            
-                if (deleteError) throw deleteError;
+        if (listError) throw listError; // ✅ karon defined na siya
 
-                console.log("✅ Files deleted:", filePaths);
-    
-            }
+        // Step 2: Delete tanan files
+        if (files && files.length > 0) {
+            const filePaths = files.map(f => `${userId}/${f.name}`);
+            const { error: deleteError } = await supabase.storage
+                .from(BUCKET)
+                .remove(filePaths);
 
-            // Delete all memories from database
-            await supabase.from('memories').delete().eq('user_id', userId);
-
-            // Delete Firebase account
-            await deleteUser(currentUser);
-
-            localStorage.removeItem('capsule_shown_notifs');
-            alert('Your account has been deleted. Goodbye! 👋');
-            window.location.href = 'examplesignin.html';
-
-        } catch (err) {
-            console.error(err);
-            if (err.code === 'auth/requires-recent-login') {
-                showStatus('deleteAccountStatus', '❌ Please log out and log back in first before deleting your account.', 'error');
-            } else {
-                showStatus('deleteAccountStatus', '❌ Failed: ' + err.message, 'error');
-            }
-            setLoading('deleteAccountBtn', false, 'Delete My Account');
+            if (deleteError) throw deleteError;
+            console.log('✅ Files deleted:', filePaths);
         }
-    });
 
+        // Step 3: Delete tanan memories sa database
+        const { error: dbError } = await supabase
+            .from('memories')
+            .delete()
+            .eq('user_id', userId);
+
+        if (dbError) throw dbError;
+
+        // Step 4: Delete ang Firebase Auth account
+        await deleteUser(currentUser);
+
+        // Step 5: Clean up localStorage
+        localStorage.removeItem('capsule_shown_notifs');
+        localStorage.removeItem('capsule_name_' + userId);
+
+        alert('Your account has been deleted. Goodbye! 👋');
+        window.location.href = 'examplesignin.html';
+
+    } catch (err) {
+        console.error(err);
+        if (err.code === 'auth/requires-recent-login') {
+            showStatus('deleteAccountStatus',
+                '❌ Please log out and log back in first before deleting your account.', 'error');
+        } else {
+            showStatus('deleteAccountStatus', '❌ Failed: ' + err.message, 'error');
+        }
+        setLoading('deleteAccountBtn', false, 'Delete My Account');
+    }
+});
+    
     // ── MUSIC ──
     const music    = document.getElementById('capsuleMusic');
     const musicBtn = document.getElementById('music-btn');

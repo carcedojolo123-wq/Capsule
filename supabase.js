@@ -22,9 +22,6 @@ const firebaseApp     = initializeApp(firebaseConfig);
 const auth            = getAuth(firebaseApp);
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-
-
-
 // ── Auth state logger (para sa debugging) ──
 onAuthStateChanged(auth, (user) => {
     if (user) {

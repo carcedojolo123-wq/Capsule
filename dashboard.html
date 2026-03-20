@@ -69,12 +69,129 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
-        .btn-seal { background: var(--brown); color: white; }
+        .btn-seal   { background: var(--brown); color: white; }
         .btn-seal:hover { background: var(--brown-mid); }
         .btn-logout { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
         .btn-logout:hover { background: var(--red); color: white; }
         .btn-profile { background: transparent; color: var(--brown); border: 1.5px solid var(--border); }
         .btn-profile:hover { background: var(--border); }
+
+        /* ── NOTIFICATION BELL (inside navbar, no overlap) ── */
+        .notif-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .notif-bell-btn {
+            position: relative;
+            background: transparent;
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--brown);
+            transition: background 0.15s;
+        }
+        .notif-bell-btn:hover { background: var(--border); }
+        .notif-bell-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--brown);
+            flex-shrink: 0;
+        }
+        .notif-bell-btn .bell-label { font-size: 13px; }
+
+        /* Badge dot — sits inside the button, top-right of the icon area */
+        .notif-dot {
+            position: absolute;
+            top: 5px;
+            right: 6px;
+            width: 8px;
+            height: 8px;
+            background: #e05a2b;
+            border-radius: 50%;
+            border: 2px solid var(--surface);
+            display: none;
+        }
+        .notif-dot.visible { display: block; }
+
+        /* ── DROPDOWN PANEL ── */
+        .notif-panel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 280px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(74,50,32,0.14);
+            z-index: 200;
+        }
+        .notif-panel.open { display: block; }
+
+        .notif-panel-header {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notif-panel-header span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--brown);
+        }
+        .notif-clear-btn {
+            font-size: 11px;
+            color: var(--brown-lt);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.15s;
+        }
+        .notif-clear-btn:hover { background: #f0e8d8; color: var(--brown); }
+
+        .notif-list { max-height: 260px; overflow-y: auto; }
+        .notif-item {
+            padding: 10px 14px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(232,201,154,0.4);
+            transition: background 0.12s;
+            cursor: pointer;
+        }
+        .notif-item:last-child { border-bottom: none; }
+        .notif-item:hover { background: #faf4eb; }
+        .notif-item-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e05a2b;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+        .notif-item-dot.read { background: var(--brown-lt); }
+        .notif-item-title { font-size: 13px; color: var(--brown); margin-bottom: 2px; }
+        .notif-item-time  { font-size: 11px; color: var(--brown-lt); }
+
+        .notif-empty {
+            padding: 24px 14px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--brown-lt);
+            font-style: italic;
+        }
 
         /* ── MAIN ── */
         .main { max-width: 960px; margin: 0 auto; padding: 36px 24px 80px; }
@@ -86,9 +203,9 @@
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
         .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 12px var(--shadow); text-align: center; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-3px); }
-        .stat-icon { font-size: 28px; margin-bottom: 8px; }
+        .stat-icon   { font-size: 28px; margin-bottom: 8px; }
         .stat-number { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
-        .stat-label { font-size: 12px; color: var(--brown-lt); font-weight: 500; }
+        .stat-label  { font-size: 12px; color: var(--brown-lt); font-weight: 500; }
 
         /* ── TABS ── */
         .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
@@ -112,74 +229,58 @@
         .capsule-message { font-size: 13px; color: var(--brown); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .capsule-message.no-message { color: var(--brown-lt); font-style: italic; }
 
-        .capsule-date { font-size: 11px; color: var(--brown-lt); }
+        .capsule-date      { font-size: 11px; color: var(--brown-lt); }
         .capsule-countdown { margin-top: 10px; font-size: 12px; color: #a07030; background: #fef3e2; border-radius: 8px; padding: 6px 10px; font-weight: 500; }
 
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--brown-lt); }
-        .empty-icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state  { text-align: center; padding: 60px 20px; color: var(--brown-lt); }
+        .empty-icon   { font-size: 48px; margin-bottom: 16px; }
         .empty-state h3 { font-size: 18px; color: var(--brown); margin-bottom: 8px; }
-        .empty-state p { font-size: 13px; line-height: 1.6; }
+        .empty-state p  { font-size: 13px; line-height: 1.6; }
         .btn-create { display: inline-block; margin-top: 20px; padding: 12px 28px; background: var(--brown); color: white; border: none; border-radius: 12px; font-family: 'Poppins', sans-serif; font-size: 14px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
         .btn-create:hover { background: var(--brown-mid); }
 
         .loading { text-align: center; padding: 60px; color: var(--brown-lt); font-size: 14px; }
-        .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+        .spinner  { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #music-btn { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 2px solid var(--border); border-radius: 50%; width: 48px; height: 48px; font-size: 20px; cursor: pointer; box-shadow: 0 4px 15px var(--shadow); z-index: 999; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; }
-
-        /* Fix notification bell — dili mag-overlap sa navbar */
-        #notif-btn, .notif-btn, [id*="notif"], [class*="notif-btn"] {
-            position: fixed !important;
-            top: 70px !important;
-            right: 16px !important;
-            z-index: 98 !important;
-        }
         #music-btn:hover { transform: scale(1.1); }
 
-        /* ── TABLET (768px) ── */
+        /* ── TABLET ── */
         @media (max-width: 768px) {
             .user-email { display: none; }
             .btn-nav { padding: 6px 12px; font-size: 12px; }
             .navbar-logo { font-size: 20px; }
+            .bell-label { display: none; }
         }
 
-        /* ── MOBILE (480px) ── */
+        /* ── MOBILE ── */
         @media (max-width: 480px) {
-            .navbar {
-                height: 56px;
-                padding: 0 12px;
-                flex-wrap: nowrap;
-            }
+            .navbar { height: 56px; padding: 0 12px; flex-wrap: nowrap; }
             .navbar-logo { font-size: 16px; letter-spacing: 2px; }
-            .navbar-right {
-                gap: 5px;
-                flex-shrink: 0;
-            }
+            .navbar-right { gap: 5px; flex-shrink: 0; }
             .user-email { display: none; }
             .btn-nav { padding: 5px 9px; font-size: 11px; }
-            /* + Seal Memory — short version */
-            .btn-seal { font-size: 11px; padding: 5px 10px; }
+            .btn-seal    { font-size: 11px; padding: 5px 10px; }
             .btn-profile { font-size: 11px; padding: 5px 9px; }
-            .btn-logout { font-size: 11px; padding: 5px 9px; }
+            .btn-logout  { font-size: 11px; padding: 5px 9px; }
+            .bell-label  { display: none; }
+            .notif-bell-btn { padding: 5px 8px; }
+            .notif-panel { right: -10px; width: 260px; }
 
             .main { padding: 20px 12px 80px; }
             .welcome h1 { font-size: 22px; }
-            .welcome p { font-size: 12px; }
-
-            .stats-row { gap: 8px; }
-            .stat-card { padding: 12px 8px; border-radius: 12px; }
-            .stat-icon { font-size: 22px; margin-bottom: 4px; }
+            .welcome p  { font-size: 12px; }
+            .stats-row  { gap: 8px; }
+            .stat-card  { padding: 12px 8px; border-radius: 12px; }
+            .stat-icon  { font-size: 22px; margin-bottom: 4px; }
             .stat-number { font-size: 22px; }
-            .stat-label { font-size: 10px; }
-
+            .stat-label  { font-size: 10px; }
             .tab-btn { padding: 8px 12px; font-size: 13px; }
             .capsules-grid { grid-template-columns: 1fr; }
-
             #music-btn { width: 40px; height: 40px; font-size: 16px; bottom: 16px; right: 16px; }
         }
 
-        /* ── VERY SMALL (360px) ── */
         @media (max-width: 360px) {
             .navbar-logo { font-size: 16px; }
             .btn-nav { padding: 5px 8px; font-size: 10px; }
@@ -199,6 +300,29 @@
         <span class="user-email" id="userEmail">Loading...</span>
         <button class="btn-nav btn-seal" onclick="window.location.href='Capsuleinside.html'">+ Seal</button>
         <button class="btn-nav btn-profile" onclick="window.location.href='profile.html'">👤 Profile</button>
+
+        <!-- ✅ NOTIFICATION BELL — inside navbar, dili mag-overlap -->
+        <div class="notif-wrapper" id="notifWrapper">
+            <button class="notif-bell-btn" id="notifBellBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="bell-label">Your Capsules</span>
+                <span class="notif-dot" id="notifDot"></span>
+            </button>
+
+            <div class="notif-panel" id="notifPanel">
+                <div class="notif-panel-header">
+                    <span>Notifications</span>
+                    <button class="notif-clear-btn" id="notifClearBtn">Clear all</button>
+                </div>
+                <div class="notif-list" id="notifList">
+                    <div class="notif-empty">No notifications yet 🍌</div>
+                </div>
+            </div>
+        </div>
+
         <button class="btn-nav btn-logout" id="logoutBtn">Sign Out</button>
     </div>
 </nav>
@@ -245,7 +369,6 @@
     import { getAuth, onAuthStateChanged, signOut }
         from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
     import { supabase } from './supabase.js';
-    import { init as initNotif } from './notifications.js';
 
     const firebaseConfig = {
         apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
@@ -264,10 +387,7 @@
     let currentTab  = 'locked';
 
     onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-            window.location.href = 'examplesignin.html';
-            return;
-        }
+        if (!user) { window.location.href = 'examplesignin.html'; return; }
 
         document.getElementById('pageContent').style.display = 'block';
         document.getElementById('userEmail').textContent = user.email;
@@ -275,11 +395,10 @@
         document.getElementById('welcomeSub').textContent = 'Here are all your sealed memories, ' + user.email;
 
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('refresh')) {
-            window.history.replaceState({}, '', 'dashboard.html');
-        }
+        if (urlParams.get('refresh')) window.history.replaceState({}, '', 'dashboard.html');
+
         await loadAllCapsules(user.uid);
-        initNotif(user.uid);
+        loadNotifications(user.uid);
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -287,6 +406,83 @@
         window.location.href = 'examplesignin.html';
     });
 
+    // ══════════════════════════════════════════
+    // NOTIFICATION BELL LOGIC
+    // ══════════════════════════════════════════
+    let notifOpen = false;
+
+    document.getElementById('notifBellBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        notifOpen = !notifOpen;
+        document.getElementById('notifPanel').classList.toggle('open', notifOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!document.getElementById('notifWrapper').contains(e.target)) {
+            notifOpen = false;
+            document.getElementById('notifPanel').classList.remove('open');
+        }
+    });
+
+    document.getElementById('notifClearBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('notifList').innerHTML = '<div class="notif-empty">No notifications yet 🍌</div>';
+        document.getElementById('notifDot').classList.remove('visible');
+    });
+
+    async function loadNotifications(userId) {
+        // Kuhaon ang mga capsule nga bag-o lang nabuksan (within last 24 hours)
+        const { data, error } = await supabase
+            .from('memories')
+            .select('id, message, open_date')
+            .eq('user_id', userId)
+            .lte('open_date', new Date().toISOString())
+            .gte('open_date', new Date(Date.now() - 86400000).toISOString())
+            .order('open_date', { ascending: false });
+
+        if (error || !data || data.length === 0) return;
+
+        const list = document.getElementById('notifList');
+        list.innerHTML = '';
+        document.getElementById('notifDot').classList.add('visible');
+
+        data.forEach(capsule => {
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+
+            const timeAgo = getTimeAgo(new Date(capsule.open_date));
+            const preview = capsule.message
+                ? capsule.message.substring(0, 40) + (capsule.message.length > 40 ? '...' : '')
+                : 'Your capsule is now open!';
+
+            item.innerHTML = `
+                <div class="notif-item-dot"></div>
+                <div>
+                    <div class="notif-item-title">🎁 A capsule just opened!</div>
+                    <div class="notif-item-time">${preview}</div>
+                    <div class="notif-item-time">${timeAgo}</div>
+                </div>
+            `;
+            item.addEventListener('click', () => {
+                window.location.href = 'capsule-detail.html?id=' + capsule.id;
+            });
+            list.appendChild(item);
+        });
+    }
+
+    function getTimeAgo(date) {
+        const diff = Date.now() - date.getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1)  return 'Just now';
+        if (mins < 60) return mins + ' min ago';
+        const hrs = Math.floor(mins / 60);
+        if (hrs < 24)  return hrs + ' hr ago';
+        return Math.floor(hrs / 24) + ' day(s) ago';
+    }
+
+    // ══════════════════════════════════════════
+    // CAPSULE LOADING
+    // ══════════════════════════════════════════
     async function loadAllCapsules(userId) {
         const { data, error } = await supabase
             .from('memories')
@@ -295,7 +491,6 @@
             .order('open_date', { ascending: false });
 
         if (error) {
-            console.error('Load error:', error);
             document.getElementById('capsulesContainer').innerHTML =
                 '<div class="empty-state"><div class="empty-icon">⚠️</div>' +
                 '<h3>Could not load capsules</h3>' +
@@ -304,7 +499,6 @@
         }
 
         allCapsules = data || [];
-
         const now    = new Date();
         const locked = allCapsules.filter(c => new Date(c.open_date) > now);
         const opened = allCapsules.filter(c => new Date(c.open_date) <= now);
@@ -324,7 +518,7 @@
     };
 
     function renderTab(tab) {
-        const now = new Date();
+        const now      = new Date();
         const filtered = tab === 'locked'
             ? allCapsules.filter(c => new Date(c.open_date) > now)
             : allCapsules.filter(c => new Date(c.open_date) <= now);
@@ -408,20 +602,13 @@
         return card;
     }
 
+    // ── MUSIC ──
     const music    = document.getElementById('capsuleMusic');
     const musicBtn = document.getElementById('music-btn');
     let isPlaying  = false;
-
     musicBtn.addEventListener('click', () => {
-        if (isPlaying) {
-            music.pause();
-            isPlaying = false;
-            musicBtn.textContent = '🔇';
-        } else {
-            music.play();
-            isPlaying = true;
-            musicBtn.textContent = '🎵';
-        }
+        if (isPlaying) { music.pause(); isPlaying = false; musicBtn.textContent = '🔇'; }
+        else           { music.play();  isPlaying = true;  musicBtn.textContent = '🎵'; }
     });
 </script>
 

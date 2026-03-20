@@ -147,11 +147,10 @@
         window.location.href = 'dashboard.html';
     });
 
-    // Helper: i-reset ang button ug flag
     function resetBtn() {
         isSealing = false;
         const btn = document.getElementById("sealBtn");
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = "🔒 Seal Memory";
     }
 
@@ -159,7 +158,6 @@
 
     document.getElementById("sealBtn").addEventListener("click", async () => {
 
-        // STEP 1: Block dayon — bisan pag double-click
         if (isSealing) return;
         isSealing = true;
 
@@ -167,33 +165,35 @@
         const statusEl = document.getElementById("status");
         const outerEl  = document.getElementById("hourglassOuter");
 
-        // STEP 2: Disable button DAYON — walay gap para double-click
-        sealBtn.disabled = true;
+        sealBtn.disabled    = true;
         sealBtn.textContent = "Sealing...";
 
-        // STEP 3: Kuhaon ang values
         const message = document.getElementById("memoryText").value.trim();
         const file    = document.getElementById("memoryFile").files[0];
-        const date    = document.getElementById("openDate").value;
+        const date    = document.getElementById("openDate").value; // "2026-03-21T01:50"
 
-        // STEP 4: Validation — i-reset kung invalid
         if (!date) {
             statusEl.innerText = "Please set a date to open your memory.";
-            resetBtn();
-            return;
+            resetBtn(); return;
         }
         if (!message && !file) {
             statusEl.innerText = "Please add a message or upload a file.";
-            resetBtn();
-            return;
+            resetBtn(); return;
         }
 
         const user = auth.currentUser;
         if (!user) {
             statusEl.innerText = "Not logged in!";
-            resetBtn();
-            return;
+            resetBtn(); return;
         }
+
+        // ══════════════════════════════════════════
+        // TIMEZONE FIX — idugang +08:00 para Supabase
+        // nahibalo nga Philippine Time ni
+        // "2026-03-21T01:50" → "2026-03-21T01:50:00+08:00"
+        // Dili na mag-shift ang oras pag display
+        // ══════════════════════════════════════════
+        const openDatePH = date + ':00+08:00';
 
         statusEl.innerText = "Saving your memory...";
 
@@ -201,7 +201,6 @@
             let filePath = null;
             let fileUrl  = null;
 
-            // STEP 5: Upload file kung naa
             if (file) {
                 statusEl.innerText = "Uploading file...";
                 const ext      = file.name.split('.').pop().toLowerCase();
@@ -210,7 +209,7 @@
                 const { data: uploadData, error: uploadError } =
                     await supabase.storage
                         .from(BUCKET)
-                        .upload(fileName, file, { upsert: false});
+                        .upload(fileName, file, { upsert: false });
 
                 if (uploadError) throw uploadError;
 
@@ -219,24 +218,22 @@
                 fileUrl = urlData.publicUrl;
             }
 
-            // STEP 6: Server-side duplicate check
-            // Pangutana sa Supabase: naa na ba ni same user + date + message?
+            // Duplicate check — gamit openDatePH
             const { data: existing, error: checkError } = await supabase
                 .from('memories')
                 .select('id')
-                .eq('user_id', user.uid)
-                .eq('open_date', date)
-                .eq('message', message || null)
+                .eq('user_id',   user.uid)
+                .eq('open_date', openDatePH) // ← FIXED
+                .eq('message',   message || null)
                 .limit(1);
 
-            // Kung naa na — dili mag-insert, redirect nalang
             if (!checkError && existing && existing.length > 0) {
                 statusEl.innerText = "Memory already sealed! Redirecting...";
                 setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
                 return;
             }
 
-            // STEP 7: Insert sa database
+            // Insert — gamit openDatePH
             const { error: insertError } = await supabase
                 .from('memories')
                 .insert({
@@ -244,12 +241,11 @@
                     message:   message || null,
                     file_path: filePath || null,
                     file_url:  fileUrl  || null,
-                    open_date: date
+                    open_date: openDatePH // ← FIXED
                 });
 
             if (insertError) throw insertError;
 
-            // STEP 8: Success!
             outerEl.classList.add("seal-glow");
             setTimeout(() => outerEl.classList.remove("seal-glow"), 1200);
             statusEl.innerText = "Memory sealed! 🎉 Redirecting...";
@@ -257,12 +253,10 @@
 
         } catch (err) {
             console.error(err);
-            // Kung unique constraint violation — duplicate, redirect nalang
             if (err.message && err.message.includes('unique_memory')) {
                 statusEl.innerText = "Memory already sealed! Redirecting...";
                 setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
             } else {
-                // Real error — i-reset para pwede mag-retry
                 statusEl.innerText = "Error: " + err.message;
                 resetBtn();
             }

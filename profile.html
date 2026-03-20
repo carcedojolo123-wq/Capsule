@@ -336,10 +336,20 @@ list.querySelectorAll('.btn-delete').forEach(btn => {
 
             // — Step 2: I-delete sa storage kung naa file —
             if (capsuleRecord?.file_path) {
-                const { error: storageError } = await supabase.storage
-                    .from(BUCKET)
-                    .remove([capsuleRecord.file_path]);
-                console.log('Storage delete:', storageError || 'success');
+              const filePath = capsuleRecord.file_path;
+
+              console.log('Deleting file:', filePath);
+
+              const { error: storageError } = await supabase.storage
+                .from(BUCKET)
+                .remove([filePath]);
+
+              if (storageError) {
+                console.error('Storage delete failed:', storageError);
+                throw storageError; // ← importante ni
+              }
+
+              console.log('✅ Storage delete success');
             }
 
             // — Step 3: I-delete sa database —

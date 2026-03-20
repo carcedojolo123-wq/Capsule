@@ -213,7 +213,7 @@
 
                 if (uploadError) throw uploadError;
 
-                filePath = uploadData.path;
+                filePath = fileName;
                 const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(filePath);
                 fileUrl = urlData.publicUrl;
             }

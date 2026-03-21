@@ -606,18 +606,48 @@
     const music    = document.getElementById('capsuleMusic');
     const musicBtn = document.getElementById('music-btn');
     let isPlaying  = false;
-    musicBtn.addEventListener('click', () => {
-        if (isPlaying) { music.pause(); isPlaying = false; musicBtn.textContent = '🔇'; }
-        else           { music.play();  isPlaying = true;  musicBtn.textContent = '🎵'; }
-    });
-</script>
 
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/Capsule/sw.js')
-        .then(() => console.log('SW registered!'))
-        .catch(err => console.log('SW error', err));
+    function startMusic() {
+        music.play().then(() => {
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+    }).catch(() => {
+            isPlaying = false;
+            musicBtn.textContent = '🔇';
+    });
+}
+
+
+startMusic();
+
+
+function onFirstInteraction() {
+    if (!isPlaying) {
+        music.play().then(() => {
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+        });
     }
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('touchstart', onFirstInteraction);
+}
+document.addEventListener('click', onFirstInteraction);
+document.addEventListener('touchstart', onFirstInteraction);
+
+// Manual toggle ni user
+musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // important kaayo ni!
+    if (isPlaying) {
+        music.pause();
+        isPlaying = false;
+        musicBtn.textContent = '🔇';
+    } else {
+        music.play();
+        isPlaying = true;
+        musicBtn.textContent = '🎵';
+    }
+});
+
 </script>
 
 </body>

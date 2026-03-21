@@ -51,10 +51,11 @@
 </head>
 <body>
 
+<!-- 🎵 IBUTANG DIRI ANG FILENAME SA IMONG SPECIAL MUSIC -->
 <audio id="capsuleMusic" loop>
-    <source src="Joe Hisaishi - Nostalgia (Piano Solo).mp3" type="audio/mpeg">
+    <source src="IMONG-SPECIAL-MUSIC-DIRI.mp3" type="audio/mpeg">
 </audio>
-<button id="music-btn">🎵</button>
+<button id="music-btn">🔇</button>
 
 <nav class="navbar">
     <div class="navbar-logo">CAPSULE</div>
@@ -91,37 +92,88 @@
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
+    // ══════════════════════════════════════════
+    // MUSIC SETUP
+    // ══════════════════════════════════════════
+    const music    = document.getElementById('capsuleMusic');
+    const musicBtn = document.getElementById('music-btn');
+    let isPlaying  = false;
+
+    // Gi-expose para ma-call sa renderCapsule() kung opened na
+    window._triggerCapsuleMusic = function() {
+        music.play().then(() => {
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+        }).catch(() => {
+            // Browser nag-block — maghulat sa first interaction
+            isPlaying = false;
+            musicBtn.textContent = '🔇';
+
+            function onFirstInteraction() {
+                if (!isPlaying) {
+                    music.play().then(() => {
+                        isPlaying = true;
+                        musicBtn.textContent = '🎵';
+                    });
+                }
+                document.removeEventListener('click', onFirstInteraction);
+                document.removeEventListener('touchstart', onFirstInteraction);
+            }
+            document.addEventListener('click', onFirstInteraction);
+            document.addEventListener('touchstart', onFirstInteraction);
+        });
+    };
+
+    // Manual toggle ni user
+    musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isPlaying) {
+            music.pause();
+            isPlaying = false;
+            musicBtn.textContent = '🔇';
+        } else {
+            music.play();
+            isPlaying = true;
+            musicBtn.textContent = '🎵';
+        }
+    });
+
+    // ══════════════════════════════════════════
+    // BACK BUTTON
+    // ══════════════════════════════════════════
     document.getElementById('backBtn').addEventListener('click', () => {
+        music.pause(); // i-stop ang music pag-balik sa dashboard
         window.location.href = 'dashboard.html';
     });
 
+    // ══════════════════════════════════════════
+    // HELPER FUNCTIONS
+    // ══════════════════════════════════════════
     function toISO(localDatetimeStr) {
         const [date, time] = localDatetimeStr.split('T');
         const [year, month, day] = date.split('-').map(Number);
         const [hour, minute] = time.split(':').map(Number);
-
-
-    const localDate = new Date(year, month - 1, day, hour, minute);
-
-    return localDate.toISOString();
-}
-
-    function formatPH(dateStr, showTime = true) {
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'Asia/Manila'
-    };
-
-    if (showTime) {
-        options.hour   = '2-digit';
-        options.minute = '2-digit';
+        const localDate = new Date(year, month - 1, day, hour, minute);
+        return localDate.toISOString();
     }
 
-    return new Date(dateStr).toLocaleString('en-PH', options);
-}
+    function formatPH(dateStr, showTime = true) {
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'Asia/Manila'
+        };
+        if (showTime) {
+            options.hour   = '2-digit';
+            options.minute = '2-digit';
+        }
+        return new Date(dateStr).toLocaleString('en-PH', options);
+    }
 
+    // ══════════════════════════════════════════
+    // AUTH + LOAD
+    // ══════════════════════════════════════════
     onAuthStateChanged(auth, async (user) => {
         if (!user) {
             window.location.href = 'examplesignin.html';
@@ -157,13 +209,16 @@
         renderCapsule(capsule);
     }
 
+    // ══════════════════════════════════════════
+    // RENDER
+    // ══════════════════════════════════════════
     function renderCapsule(capsule) {
         const container = document.getElementById('capsuleContent');
         const now       = new Date();
         const openDate  = new Date(capsule.open_date);
         const isLocked  = openDate > now;
 
-        // ── LOCKED STATE ──
+        // ── LOCKED STATE — walay music ──
         if (isLocked) {
             const diff    = openDate - now;
             const days    = Math.floor(diff / 86400000);
@@ -191,11 +246,10 @@
                     </p>
                 </div>
             `;
-            return;
+            return; // ← mo-stop diri, dili ma-reach ang music trigger
         }
 
         // ── OPENED STATE ──
-        // FIX: backticks na karon — dili na mag-syntax error
         let mediaHTML = '<div class="detail-no-media">📦</div>';
         if (capsule.file_url) {
             const isVideo = /\.(mp4|mov|webm|avi)$/i.test(capsule.file_url);
@@ -208,13 +262,11 @@
             mediaHTML = '<div class="detail-no-media">📝</div>';
         }
 
-        // FIX: formatPH() — tama na ang PH timezone display
         const openDateLabel   = formatPH(capsule.open_date, true);
         const sealedDateLabel = capsule.created_at
             ? formatPH(capsule.created_at, false)
             : 'Unknown';
 
-        // FIX: backticks na karon
         const messageHTML = capsule.message
             ? `<div class="detail-message">💬 ${capsule.message}</div>`
             : `<div class="detail-message" style="color:var(--brown-lt); font-style:italic;">No message was written for this capsule.</div>`;
@@ -239,26 +291,8 @@
             </div>
         `;
 
-        const music = document.getElementById('capsuleMusic');
-        if (music) {
-            window._bgMusic = music;
-            const startMusic = () => {
-                if (window._capsuleSoundPlaying) return;
-                if (isPlaying) return;
-                music.play().then(() => {
-                    isPlaying = true;
-                    document.getElementById('music-btn').textContent = '🎵';
-                }).catch(() => {});
-            };
-            music.play().then(() => {
-                isPlaying = true;
-                document.getElementById('music-btn').textContent = '🎵';
-            }).catch(() => {
-                ['click', 'touchstart', 'keydown', 'scroll'].forEach(evt => {
-                    document.addEventListener(evt, startMusic, { once: true });
-                });
-            });
-        }
+        // 🎵 Mo-play ang special music — opened na ang capsule!
+        window._triggerCapsuleMusic();
     }
 
     function showError(msg) {
@@ -270,20 +304,6 @@
             </div>
         `;
     }
-
-    const music    = document.getElementById('capsuleMusic');
-    const musicBtn = document.getElementById('music-btn');
-    let isPlaying  = false;
-
-    window._setMusicPlaying = (val) => {
-        isPlaying = val;
-        musicBtn.textContent = val ? '🎵' : '🔇';
-    };
-
-    musicBtn.addEventListener('click', () => {
-        if (isPlaying) { music.pause(); isPlaying = false; musicBtn.textContent = '🔇'; }
-        else { music.play().catch(() => {}); isPlaying = true; musicBtn.textContent = '🎵'; }
-    });
 </script>
 
 <script>

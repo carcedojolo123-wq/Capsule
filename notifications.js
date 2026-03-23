@@ -268,6 +268,10 @@ async function checkCapsules(userId) {
         .eq('is_notified', false)
         .eq('user_id', userId);
 
+
+    console.log('checkCapsules called for user:', userId);
+    console.log('Query result:', readyMemories, error);
+
     if (error) { console.error('Notification check error:', error); return; }
     if (!readyMemories || readyMemories.length === 0) return;
 

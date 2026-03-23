@@ -369,6 +369,7 @@
     import { getAuth, onAuthStateChanged, signOut }
         from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
     import { supabase } from './supabase.js';
+    import { init as initNotifs } from './notifications.js';
 
     const firebaseConfig = {
         apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
@@ -399,6 +400,7 @@
 
         await loadAllCapsules(user.uid);
         loadNotifications(user.uid);
+        initNotifs(user.uid);
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {

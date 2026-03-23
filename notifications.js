@@ -1,6 +1,39 @@
 import { supabase } from './supabase.js';
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-messaging.js";
 
-// Load previously shown IDs from localStorage — dili ma-repeat after page reload
+// ── FCM Setup ──
+const VAPID_KEY = 'BAvaga-Cvmuhx2RC7mrgka3ZCeiYs5g67Vcm697SukS2jY-DfZkA5FmWtimIRZyCLQ1GvmOJD5iF1BH5Y1I76f4';
+
+const _fcmApp = getApps().length ? getApps()[0] : initializeApp({
+    apiKey: "AIzaSyBtKdC5Po01JvwfC33AywIZKDZ-4-6SH9Y",
+    authDomain: "capsule-d556e.firebaseapp.com",
+    projectId: "capsule-d556e",
+    storageBucket: "capsule-d556e.firebasestorage.app",
+    messagingSenderId: "667845284113",
+    appId: "1:667845284113:web:cf11b1d4b7ef99eb83fcb0",
+    databaseURL: "https://capsule-d556e-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
+const _messaging = getMessaging(_fcmApp);
+
+async function registerFCMToken(userId) {
+    try {
+        if (Notification.permission !== 'granted') return;
+        const token = await getToken(_messaging, { vapidKey: VAPID_KEY });
+        if (!token) return;
+        await supabase
+            .from('fcm_tokens')
+            .upsert(
+                { user_id: userId, token, updated_at: new Date().toISOString() },
+                { onConflict: 'user_id' }
+            );
+        console.log('FCM token registered ✅');
+    } catch (err) {
+        console.error('FCM token error:', err);
+    }
+}
+
+// ── Load previously shown IDs from localStorage — dili ma-repeat after page reload ──
 const shownNotifIds = new Set(
     JSON.parse(localStorage.getItem('capsule_shown_notifs') || '[]')
 );
@@ -80,7 +113,7 @@ function createNotifBell() {
         .notif-time { font-size: 10px; color: #b89878; margin-top: 3px; }
         .notif-empty { padding: 24px 16px; text-align: center; color: #c0a080; font-size: 12px; }
 
-        /* ── TOAST — top center, dili nag-overlap sa content ── */
+        /* ── TOAST ── */
         #notif-toast {
             position: fixed;
             top: 76px;
@@ -172,13 +205,13 @@ function addNotifItem(memory) {
         (memory.file_url.includes('.mp4') || memory.file_url.includes('.mov') || memory.file_url.includes('.webm'));
     const icon = isVideo ? '🎬' : '📸';
     const timeLabel = new Date(memory.open_date).toLocaleString('en-PH', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Asia/Manila'
-});
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Manila'
+    });
 
     const item = document.createElement('div');
     item.className = 'notif-item';
@@ -259,7 +292,7 @@ async function checkCapsules(userId) {
         if (Notification.permission === 'granted') {
             new Notification('🎉 Your Time Capsule is Open!', {
                 body: memory.message || 'A memory from your past is ready!',
-                icon: '/favicon.ico'
+                icon: '/Capsule/icon-192.png'
             });
         }
 
@@ -287,6 +320,7 @@ async function requestPermission() {
 async function init(userId) {
     createNotifBell();
     await requestPermission();
+    await registerFCMToken(userId); // ← FCM token registration
     await checkCapsules(userId);
     setInterval(() => checkCapsules(userId), 60000);
 }
